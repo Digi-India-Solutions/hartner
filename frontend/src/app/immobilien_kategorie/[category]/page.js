@@ -94,20 +94,20 @@ function CategoryPage({ params: paramsPromise }) {
     <div className="bg-white flex flex-col w-full">
       <main className="flex-grow pt-20">
         {/* Banner Section */}
-        <section className="bg-black text-white py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url('/images/hero-1.jpg')` }}></div>
+        <section className="bg-[#1c1c1c] text-white py-28 relative overflow-hidden">
+          <div className="absolute inset-0 bg-cover bg-center opacity-25" style={{ backgroundImage: `url('/images/hero-1.jpg')` }}></div>
           <div className="max-w-[1600px] mx-auto px-6 md:px-10 lg:px-20 xl:px-28 relative z-10">
-            <p className="text-yellow-600 font-semibold mb-3 tracking-widest uppercase text-sm">
+            <p className="text-yellow-600 font-semibold mb-4 tracking-[0.2em] uppercase text-xs md:text-sm">
               {categoryConfig.subtitle}
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-serif font-light tracking-wide">
               {categoryConfig.title}
             </h1>
           </div>
         </section>
 
         {/* Content Section */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-24 bg-white">
           <div className="max-w-[1600px] mx-auto px-6 md:px-10 lg:px-20 xl:px-28">
             
             {loading && (
@@ -124,10 +124,12 @@ function CategoryPage({ params: paramsPromise }) {
             )}
 
             {!loading && !error && properties.length === 0 && (
-              <div className="text-center py-20 px-8 bg-white border border-gray-200 rounded-lg max-w-4xl mx-auto shadow-sm">
-                <h3 className="text-2xl font-light text-gray-800 mb-4">{categoryConfig.title}</h3>
-                <p className="text-gray-600 text-lg">
-                  Derzeit sind keine Immobilien in dieser Kategorie verfügbar. Bitte schauen Sie später erneut vorbei.
+              <div className="text-center py-20 px-4 max-w-3xl mx-auto">
+                <h4 className="text-3xl md:text-4xl font-serif font-light text-black mb-4 leading-normal">
+                  Derzeit sind keine Immobilien in dieser Kategorie verfügbar.
+                </h4>
+                <p className="text-gray-500 text-lg md:text-xl font-light">
+                  Bitte schauen Sie später erneut vorbei.
                 </p>
               </div>
             )}
