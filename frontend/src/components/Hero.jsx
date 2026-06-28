@@ -24,78 +24,68 @@ function Hero() {
 
   return (
     <section
-      className="relative min-h-screen flex items-center bg-cover bg-center"
+      className="relative min-h-screen flex items-center bg-cover bg-center overflow-hidden"
       style={{
         backgroundImage: `url(${images[currentImage]})`,
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60"></div>
+      <div className="absolute inset-0 bg-black/55"></div>
 
       {/* Content */}
-        <div className="relative z-10 w-full pl-20 md:pl-28 lg:pl-36">
+      <div className="relative z-10 w-full pl-8 md:pl-12 lg:pl-20 pt-28 md:pt-32">
 
-        <div className="max-w-3xl">
+        <div className="max-w-[850px]">
 
-          <h1 className="
-            text-white
-            font-light
-            leading-tight
-            text-4xl
-            sm:text-5xl
-            md:text-6xl
-            lg:text-7xl
-          ">
+          <h1
+            className="
+              text-white
+              font-light
+              leading-[1.1]
+              text-4xl
+              sm:text-5xl
+              md:text-6xl
+              lg:text-[72px]
+            "
+            style={{
+              fontFamily: "Georgia, serif",
+            }}
+          >
             Ihr Immobilienpartner
             <br />
             für Wohnen, Gewerbe &
             <br />
             Investment in Österreich
+            <br />
+            und in der EU
           </h1>
 
-          <p className="
-            mt-6
-            text-gray-200
-            leading-8
-            max-w-2xl
-            text-lg
-            md:text-xl
-          ">
+          <p
+            className="
+              mt-8
+              text-white/90
+              text-base
+              md:text-xl
+              leading-8
+              max-w-3xl
+            "
+          >
             Seit mehr als 20 Jahren stehen wir für Kompetenz,
-            Vertrauen und persönliche Betreuung.
+            Vertrauen und persönliche Betreuung. Wir finden
+            die richtige Immobilie oder den passenden Käufer –
+            für Ihre Ziele.
           </p>
 
-          <div className="
-            flex
-            flex-col
-            sm:flex-row
-            gap-4
-            mt-10
-          ">
-            <button className="
-              bg-yellow-600
-              text-black
-              px-8
-              py-4
-              font-semibold
-              hover:bg-yellow-500
-              transition
-            ">
-              MEHR ÜBER UNS
-            </button>
-
-            <button className="
-              border
-              border-white
-              text-white
-              px-8
-              py-4
-              hover:bg-white
-              hover:text-black
-              transition
-            ">
-              KONTAKT AUFNEHMEN
-            </button>
+          <div
+            className="
+              flex
+              flex-col
+              sm:flex-row
+              gap-4
+              mt-10
+            "
+          >
+            {/* Buttons agar chahiye to yahan uncomment kar lena */}
           </div>
 
         </div>
