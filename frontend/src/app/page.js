@@ -7,6 +7,7 @@ import PropertySection from "@/components/PropertySection";
 import PropertyTabs from "@/components/PropertyTabs";
 import ServiceCards from "@/components/ServiceCards";
 import TrustSection from "@/components/TrustSection";
+import LeistungenSection from "@/components/LeistungenSection";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <Features />
       <TrustSection />
       <ServiceCards />
+      <LeistungenSection />
       <PropertySection />
       <AboutSection />
       <PropertyTabs />
