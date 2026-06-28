@@ -1,0 +1,7 @@
+/*/node_modules
+/*/dist
+/*/build
+.vite/
+backend/data/
+backend/check_users.js
+*.log
