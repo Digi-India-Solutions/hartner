@@ -1,7 +1,12 @@
-/*/node_modules
-/*/dist
-/*/build
+node_modules/
+dist/
+build/
 .vite/
-backend/data/
-backend/check_users.js
+
+data/
+check_users.js
+
+.env
+.env.local
+
 *.log
