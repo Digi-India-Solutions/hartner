@@ -6,7 +6,7 @@ import {
 
 function AboutSection() {
   return (
-    <section className="bg-black text-white py-8">
+    <section className="bg-black text-white py-7">
       <div className="grid grid-cols-3 min-h-[650px]">
 
         {/* Left Side */}
