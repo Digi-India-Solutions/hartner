@@ -2,12 +2,12 @@ import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import Features from "@/components/Features";
 import Hero from "@/components/Hero";
-import PropertyDetails from "@/components/PropertyDetails";
-import PropertySection from "@/components/PropertySection";
-import PropertyTabs from "@/components/PropertyTabs";
+// import PropertyDetails from "@/components/PropertyDetails";
+// import PropertySection from "@/components/PropertySection";
+// import PropertyTabs from "@/components/PropertyTabs";
+import LeistungenSection from "@/components/LeistungenSection";
 import ServiceCards from "@/components/ServiceCards";
 import TrustSection from "@/components/TrustSection";
-import LeistungenSection from "@/components/LeistungenSection";
 
 export default function Home() {
   return (
@@ -17,12 +17,11 @@ export default function Home() {
       <TrustSection />
       <ServiceCards />
       <LeistungenSection />
-      <PropertySection />
+      {/* <PropertySection /> */}
       <AboutSection />
-      <PropertyTabs />
-      <PropertyDetails />
+      {/* <PropertyTabs /> */}
+      {/* <PropertyDetails /> */}
       <ContactSection />
-
     </div>
   );
 }

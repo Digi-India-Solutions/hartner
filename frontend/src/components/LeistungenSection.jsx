@@ -7,25 +7,25 @@ function LeistungenSection() {
       title: "Gewerbeimmobilien",
       image: "/images/NG5.png",
       description: "Anlageobjekte, Zinshäuser und Wohnprojekte mit nachhaltiger Rendite. Wir finden Investments, die zu Ihren Zielen passen.",
-      link: "/immobilien_kategorie/gewerbeimmobilien"
+      link: "/immobilien/gewerbeimmobilien"
     },
     {
       title: "Investmentimmobilien",
       image: "/images/triest.jpeg",
       description: "Anlageobjekte, Zinshäuser und Wohnprojekte mit nachhaltiger Rendite. Wir finden Investments, die zu Ihren Zielen passen.",
-      link: "/immobilien_kategorie/investmentimmobilien"
+      link: "/immobilien/investmentimmobilien"
     },
     {
       title: "Mietobjekte",
       image: "/images/Mietobjekt.jpeg",
       description: "Wir vermitteln Mietwohnungen und Gewerbeimmobilien – schnell, diskret und passgenau für Mieter und deren Vermieter.",
-      link: "/immobilien_kategorie/mietobjekte"
+      link: "/immobilien/mietobjekte"
     },
     {
       title: "Wohnimmobilien",
       image: "/images/hausmit.jpeg",
       description: "Ob exklusive Villa, gemütliche Wohnung oder Baugrundstück – wir finden Ihr neues Zuhause oder die passende Wohnimmobilie.",
-      link: "/immobilien_kategorie/wohnimmobilien"
+      link: "/immobilien/wohnimmobilien"
     }
   ];
 
