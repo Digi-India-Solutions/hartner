@@ -1,8 +1,9 @@
 import { type ErrorResponse } from "@helpers/response.helper";
 import { type ErrorRequestHandler } from "express";
+import { logger } from "@helpers/logger.helper";
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  console.error("Express Error:", err);
+  logger.error("Express Error: %o", err);
   const response: ErrorResponse = {
     success: false,
     error_code: (err?.status ?? 500) as number,
