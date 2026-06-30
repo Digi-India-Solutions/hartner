@@ -36,7 +36,10 @@ const port = Number(process.env.PORT) ?? 5000;
 const app: Express = express();
 
 // Security middlewares
-app.use(helmet({ contentSecurityPolicy: false })); // Disable CSP to allow Swagger UI resources to load
+app.use(helmet({ 
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+})); // Disable CSP to allow Swagger UI resources to load
 app.use(mongoSanitize());
 
 app.use(cors());
@@ -60,7 +63,10 @@ const initApp = async (): Promise<void> => {
   initPassport();
 
   // serve uploaded files statically
-  app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+  app.use("/uploads", (req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  }, express.static(path.join(process.cwd(), "uploads")));
 
   // API Documentation (Swagger)
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
