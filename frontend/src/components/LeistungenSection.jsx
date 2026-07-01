@@ -30,7 +30,10 @@ function LeistungenSection() {
   ];
 
   return (
-    <section className="bg-white py-24 border-t border-gray-100">
+    <section
+  id="leistungen"
+  className="bg-white py-24 border-t border-gray-100"
+>
       <div className="max-w-[1600px] mx-auto px-6 md:px-10 lg:px-20">
         
         {/* Header */}
