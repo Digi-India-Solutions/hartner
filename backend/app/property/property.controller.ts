@@ -56,7 +56,8 @@ export const getPropertyById = asyncHandler(async (req: Request, res: Response) 
   const isAdmin = checkIsAdmin(req);
 
   // Search by either slug or MongoDB ObjectID
-  const query = id.match(/^[0-9a-fA-D]{24}$/i) ? { _id: id } : { slug: id };
+  // Search by either MongoDB ObjectID or slug
+  const query = mongoose.isValidObjectId(id) ? { _id: id } : { slug: id };
   const property = await PropertySchema.findOne(query);
 
   if (!property) {
