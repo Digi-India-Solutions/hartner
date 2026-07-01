@@ -1,12 +1,15 @@
 import {
-    FaBuilding,
-    FaShieldAlt,
-    FaUser,
+  FaBuilding,
+  FaShieldAlt,
+  FaUser,
 } from "react-icons/fa";
 
 function AboutSection() {
   return (
-    <section className="bg-black text-white py-7">
+    <section
+  id="about"
+  className="scroll-mt-32 bg-black text-white py-7"
+>
       <div className="grid grid-cols-3 min-h-[650px]">
 
         {/* Left Side */}

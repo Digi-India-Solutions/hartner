@@ -14,6 +14,7 @@ function ContactSection() {
 
   return (
     <section
+    id="kontakt"
       className="py-20 relative"
       style={{
         backgroundImage: "url('/images/hero-4.jpg')",

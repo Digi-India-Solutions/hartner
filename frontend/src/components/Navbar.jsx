@@ -9,37 +9,40 @@ function Navbar() {
 
         {/* Logo */}
         <div className="flex-shrink-0">
-          <Image
-            src="/images/logo1.png"
-            alt="HARTNER Logo"
-            width={200}
-            height={44}
+          <Link href="/">
+            <Image
+              src="/images/logo1.png"
+              alt="HARTNER Logo"
+              width={200}
+              height={44}
             style={{ width: 'auto', height: 'auto' }}
             className="w-auto h-[40px] md:h-[44px]"
           />
+          </Link>
         </div>
 
         {/* Menu */}
         <ul className="hidden lg:flex gap-5 xl:gap-8 text-sm xl:text-base font-semibold flex-shrink-0">
           <li>
-            <Link href="/" className="hover:text-yellow-500 transition-colors">STARTSEITE</Link>
+            <Link href="/" className="hover:text-yellow-500 transition-colors">IMMOBILIEN</Link>
           </li>
 
           <li>
-            <Link href="/leistungen" className="hover:text-yellow-500 transition-colors">LEISTUNGEN</Link>
+            <Link href="/#leistungen" className="hover:text-yellow-500 transition-colors">LEISTUNGEN</Link>
           </li>
 
           <li>
-            <Link href="/uber-uns" className="hover:text-yellow-500 transition-colors">ÜBER UNS</Link>
+            <Link href="/#uber-uns" className="hover:text-yellow-500 transition-colors">ÜBER UNS</Link>
           </li>
 
           <li>
-            <Link href="/immobilien" className="hover:text-yellow-500 transition-colors">IMMOBILIEN</Link>
-          </li>
-
-          <li>
-            <Link href="/kontakt" className="hover:text-yellow-500 transition-colors">KONTAKT</Link>
-          </li>
+  <a
+    href="#kontakt"
+    className="hover:text-yellow-500 transition-colors"
+  >
+    KONTAKT
+  </a>
+</li>
         </ul>
 
         {/* Right Side */}
@@ -49,9 +52,12 @@ function Navbar() {
             <span>+43 664 - 45 45 404</span>
           </div>
 
-          <button className="bg-yellow-400 text-black px-4 xl:px-6 py-2.5 xl:py-3 text-sm xl:text-base font-semibold hover:bg-yellow-500 transition-all duration-300">
-            KONTAKT AUFNEHMEN
-          </button>
+          <a
+  href="mailto:info@haertner-immobilien.at"
+  className="bg-yellow-400 text-black px-4 xl:px-6 py-2.5 xl:py-3 text-sm xl:text-base font-semibold hover:bg-yellow-500 transition-all duration-300 inline-block"
+>
+  KONTAKT AUFNEHMEN
+</a>
         </div>
 
       </div>
