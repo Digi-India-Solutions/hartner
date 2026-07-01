@@ -5,9 +5,9 @@ export interface IPropertyDetails {
   nutzflaeche?: string;
   widmung?: string;
   grundflaeche?: string;
-  leerstand?: boolean;
+  leerstand?: string;
   befristungen?: string;
-  unbefristete_vermietung?: boolean;
+  unbefristete_vermietung?: string;
   bau_potenzial?: string;
   balkon_terrassen?: string;
   eigengareten?: string;

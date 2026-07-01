@@ -6,10 +6,10 @@ export default function Investmentimmobilien() {
   return (
     <div className="bg-[#f5f5f5] min-h-screen pt-32 pb-20 px-4">
       <h1 className="text-4xl md:text-6xl text-center font-serif mb-16 text-black">
-        Gewerbeimmobilien
+        Wohnimmobilien
       </h1>
 
-      <div className="max-w-7xl pl-8 flex justify-start">
+      <div className="flex justify-start">
         <Link
           href="/immobilien/investmentimmobilien/id"
           className="bg-white shadow-lg rounded-[30px] overflow-hidden hover:shadow-2xl transition max-w-[650px] w-full"

@@ -9,7 +9,7 @@ export default function Investmentimmobilien() {
         Gewerbeimmobilien
       </h1>
 
-      <div className="max-w-7xl pl-8 flex justify-start">
+      <div className="flex justify-start">
         <Link
           href="/immobilien/investmentimmobilien/id"
           className="bg-white shadow-lg rounded-[30px] overflow-hidden hover:shadow-2xl transition max-w-[650px] w-full"

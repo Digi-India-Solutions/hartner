@@ -80,6 +80,7 @@ function CategoryPage({ params: paramsPromise }) {
       // If it is absolute URL or starts with uploads
       const img = property.images[0].url || property.images[0];
       if (img.startsWith("http")) return img;
+      if (img.startsWith("/uploads")) return `http://localhost:8000${img}`;
       if (img.startsWith("/")) return img;
       return `http://localhost:8000/${img}`;
     }
