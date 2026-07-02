@@ -464,8 +464,10 @@ return (
                 />
 
                 <button className="w-full bg-[#c8a052] text-white py-4 rounded-xl text-xl font-semibold hover:bg-[#b59143] transition">
-                  Anfrage senden
+                  Anfrage Senden
                 </button>
+
+
               </div>
             </div>
           </div>
