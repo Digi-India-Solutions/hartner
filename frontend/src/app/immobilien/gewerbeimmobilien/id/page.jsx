@@ -1,15 +1,14 @@
 "use client";
 
 import {
-    Building2,
-    Calendar,
-    Flame,
-    Home,
-    MapPin,
-    Ruler,
-    Shield,
-    Wrench,
-    Zap
+  Building2,
+  Calendar,
+  Home,
+  MapPin,
+  Ruler,
+  Shield,
+  Wrench,
+  Zap
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -20,83 +19,132 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 export default function Wohnimmobilien() {
-  const images = [
+    const images = [
     "/images/card1.jpg",
     "/images/card2.jpg",
     "/images/card3.jpg",
     "/images/card4.jpg",
     "/images/card5.jpg",
-  ];
+    ];
 
-  const [activeImage, setActiveImage] = useState(0);
-  const [openModal, setOpenModal] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const swiperRef = useRef(null);
+const [activeImage, setActiveImage] = useState(0);
+const [openModal, setOpenModal] = useState(false);
+const [isMounted, setIsMounted] = useState(false);
+const swiperRef = useRef(null);
+const containerRef = useRef(null);
 
-  useEffect(() => {
+    useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
-  }, []);
+    }, []);
 
-  return (
+    // Container ka layout settle hone do, phir Swiper ko force update karo
+    useEffect(() => {
+      if (!isMounted) return;
+
+      const forceUpdate = () => {
+        if (swiperRef.current && containerRef.current) {
+          const width = containerRef.current.offsetWidth;
+          if (width > 0) {
+            swiperRef.current.updateSize();
+            swiperRef.current.updateSlides();
+            swiperRef.current.updateProgress();
+            swiperRef.current.updateSlidesClasses();
+          }
+        }
+      };
+
+      // Multiple attempts — layout settle hone tak
+      const t1 = setTimeout(forceUpdate, 50);
+      const t2 = setTimeout(forceUpdate, 200);
+      const t3 = setTimeout(forceUpdate, 500);
+
+      // Window resize par bhi update karo
+      window.addEventListener("resize", forceUpdate);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+        window.removeEventListener("resize", forceUpdate);
+      };
+    }, [isMounted]);
+
+return (
     <div className="bg-[#f6f6f6] min-h-screen w-full overflow-x-hidden">
     
-      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 pt-32 pb-20">
+    <div className="max-w-[1600px] mx-auto px-4 lg:px-8 pt-32 pb-20">
 
         {/* HEADER */}
         <div className="border-b border-gray-300 pb-10 mb-10">
-          <div className="flex flex-col xl:flex-row xl:justify-between gap-10 w-full">
+        <div className="flex flex-col xl:flex-row xl:justify-between gap-10 w-full">
 
             <div>
-              <span className="inline-block px-5 py-2 rounded-full bg-[#f4efe4] text-[#c8a052] text-sm font-semibold uppercase">
+            <span className="inline-block px-5 py-2 rounded-full bg-[#f4efe4] text-[#c8a052] text-sm font-semibold uppercase">
                 Immobilienangebot
-              </span>
+            </span>
 
-              <h1 className="font-serif text-black mt-6 leading-tight text-4xl md:text-6xl max-w-4xl">
+            <h1 className="font-serif text-black mt-6 leading-tight text-4xl md:text-6xl max-w-4xl">
                 Exklusive Villa mit Pool und Garten
-              </h1>
+            </h1>
 
-              <div className="flex items-center gap-3 mt-6 text-gray-600 text-xl">
+            <div className="flex items-center gap-3 mt-6 text-gray-600 text-xl">
                 <MapPin size={24} className="text-[#c8a052]" />
                 <span>Hietzing, Wien, Österreich</span>
-              </div>
+            </div>
             </div>
 
             <div className="text-right min-w-[240px]">
-              <p className="uppercase text-gray-500 text-sm mb-1">
+            <p className="uppercase text-gray-500 text-sm mb-1">
                 Kaufpreis
-              </p>
+            </p>
 
-              <h3 className="text-[#c8a052] text-5xl font-semibold">
+            <h3 className="text-[#c8a052] text-5xl font-semibold">
                 € 2.850.000
-              </h3>
+            </h3>
 
-              <p className="uppercase text-gray-500 text-sm mt-10 mb-1">
+            <p className="uppercase text-gray-500 text-sm mt-10 mb-1">
                 Miete
-              </p>
+            </p>
 
-              <h3 className="text-[#c8a052] text-4xl font-semibold">
+            <h3 className="text-[#c8a052] text-4xl font-semibold">
                 € 6.500 / Monat
-              </h3>
+            </h3>
             </div>
 
-          </div>
+        </div>
         </div>
 
         {/* MAIN LAYOUT — Flexbox with explicit width boundary for Swiper isolation */}
         <div className="flex flex-col xl:flex-row gap-10 w-full items-start">
 
           {/* LEFT SIDE — Takes remaining space but limited structurally */}
-          <div className="w-full xl:flex-1 min-w-0 block overflow-hidden">
+        <div className="w-full xl:flex-1 min-w-0 block overflow-hidden">
 
             {/* IMAGE CAROUSEL */}
-            <div className="bg-white rounded-[30px] border overflow-hidden w-full relative h-[650px]">
+            <div
+              ref={containerRef}
+              className="bg-white rounded-[30px] border overflow-hidden w-full relative h-[650px]"
+            >
               {isMounted ? (
                 <Swiper
                   navigation
                   modules={[Navigation]}
                   className="propertySwiper h-full w-full"
                   initialSlide={activeImage}
-                  onSwiper={(swiper) => (swiperRef.current = swiper)}
+                  observer={true}
+                  observeParents={true}
+                  observeSlideChildren={true}
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                    // Mount ke turant baad ek forced update
+                    requestAnimationFrame(() => {
+                      swiper.updateSize();
+                      swiper.updateSlides();
+                      swiper.updateProgress();
+                      swiper.updateSlidesClasses();
+                    });
+                  }}
                   onSlideChange={(swiper) => setActiveImage(swiper.activeIndex)}
                 >
                   {images.map((img, index) => (
@@ -179,7 +227,7 @@ export default function Wohnimmobilien() {
                   </div>
                   <div>
                     <p className="text-gray-500">Wohnfläche</p>
-                    <h3 className="text-4xl font-semibold">420 m²</h3>
+                    <h3 className="text-4xl  text-black">420 m²</h3>
                   </div>
                 </div>
 
@@ -189,7 +237,7 @@ export default function Wohnimmobilien() {
                   </div>
                   <div>
                     <p className="text-gray-500">Nutzfläche</p>
-                    <h3 className="text-4xl font-semibold">510 m²</h3>
+                    <h3 className="text-4xl  text-black">510 m²</h3>
                   </div>
                 </div>
 
@@ -199,7 +247,7 @@ export default function Wohnimmobilien() {
                   </div>
                   <div>
                     <p className="text-gray-500">Grundfläche</p>
-                    <h3 className="text-4xl font-semibold">1.050 m²</h3>
+                    <h3 className="text-4xl text-black">1.050 m²</h3>
                   </div>
                 </div>
 
@@ -209,7 +257,7 @@ export default function Wohnimmobilien() {
                   </div>
                   <div>
                     <p className="text-gray-500">Widmung</p>
-                    <h3 className="text-4xl font-semibold">Wohngebiet</h3>
+                    <h3 className="text-4xl  text-black">Wohngebiet</h3>
                   </div>
                 </div>
 
@@ -232,11 +280,11 @@ export default function Wohnimmobilien() {
                   </div>
                   <div>
                     <p className="text-gray-500">Baujahr</p>
-                    <h3 className="text-3xl font-semibold">2021</h3>
+                    <h3 className="text-3xl  text-black">2021</h3>
                   </div>
                 </div>
 
-                <div className="border rounded-2xl p-8 flex gap-5 items-center">
+                {/* <div className="border rounded-2xl p-8 flex gap-5 items-center">
                   <div className="w-16 h-16 rounded-full border flex items-center justify-center flex-shrink-0">
                     <Flame className="text-[#c8a052]" />
                   </div>
@@ -244,15 +292,15 @@ export default function Wohnimmobilien() {
                     <p className="text-gray-500">Heizung</p>
                     <h3 className="text-3xl font-semibold">Luftwärmepumpe</h3>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="border rounded-2xl p-8 flex gap-5 items-center">
                   <div className="w-16 h-16 rounded-full border flex items-center justify-center flex-shrink-0">
                     <Shield className="text-[#c8a052]" />
                   </div>
                   <div>
-                    <p className="text-gray-500">Zustand</p>
-                    <h3 className="text-3xl font-semibold">Exzellent</h3>
+                    <p className="text-gray-500 text-black">Zustand</p>
+                    <h3 className="text-3xl  text-black">Exzellent</h3>
                   </div>
                 </div>
 
@@ -261,8 +309,8 @@ export default function Wohnimmobilien() {
                     <Zap className="text-[#c8a052]" />
                   </div>
                   <div>
-                    <p className="text-gray-500">HWB + fGEE</p>
-                    <h3 className="text-3xl font-semibold">A++ Klasse</h3>
+                    <p className="text-gray-500 text-black">HWB + fGEE</p>
+                    <h3 className="text-3xl  text-black">A++ Klasse</h3>
                   </div>
                 </div>
 
@@ -271,8 +319,8 @@ export default function Wohnimmobilien() {
                     <Wrench className="text-[#c8a052]" />
                   </div>
                   <div>
-                    <p className="text-gray-500">Bau-Potenzial</p>
-                    <h3 className="text-3xl font-semibold">Hoch</h3>
+                    <p className="text-gray-500 text-black">Bau-Potenzial</p>
+                    <h3 className="text-3xl  text-black">Hoch</h3>
                   </div>
                 </div>
 
@@ -285,7 +333,7 @@ export default function Wohnimmobilien() {
           <div className="space-y-8 w-full xl:w-[470px] flex-shrink-0 block xl:sticky xl:top-32 h-auto">
 
             <div className="bg-white border rounded-[30px] p-8">
-              <h3 className="font-serif text-3xl mb-8">
+              <h3 className="font-serif text-3xl mb-8 text-black">
                 FINANZEN & RENDITE
               </h3>
 
@@ -301,55 +349,55 @@ export default function Wohnimmobilien() {
               <div className="space-y-6 text-xl">
                 <div className="flex justify-between border-b pb-4">
                   <span className="text-gray-500">Ist-Ertrag (netto)</span>
-                  <span className="font-semibold">€ 72.000 / Jahr</span>
+                  <span className="font-semibold text-black">€ 72.000 / Jahr</span>
                 </div>
 
                 <div className="flex justify-between border-b pb-4">
                   <span className="text-gray-500">Soll-Ertrag (netto)</span>
-                  <span className="font-semibold">€ 80.000 / Jahr</span>
+                  <span className="font-semibold text-black">€ 80.000 / Jahr</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span className="text-gray-500">Ø Ist-Netto-Mietzins</span>
-                  <span className="font-semibold">€ 5.800 / Monat</span>
+                  <span className="font-semibold text-black">€ 5.800 / Monat</span>
                 </div>
               </div>
             </div>
 
             <div className="bg-white border rounded-[30px] p-8">
-              <h3 className="font-serif text-3xl mb-8">
+              <h3 className="font-serif text-3xl mb-8 text-black">
                 AUSSTATTUNG & BELEGUNG
               </h3>
 
               <div className="space-y-6 text-xl">
                 <div className="flex justify-between">
-                  <span>Balkon/Terrassen</span>
-                  <span className="px-3 py-1 rounded bg-gray-100">3</span>
+                  <span className="text-gray-500">Balkon/Terrassen</span>
+                  <span className="px-3 py-1 rounded bg-gray-100 text-black">3</span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Eigengärten</span>
-                  <span className="px-3 py-1 rounded bg-gray-100">1</span>
+                  <span className="text-gray-500">Eigengärten</span>
+                  <span className="px-3 py-1 rounded bg-gray-100 text-black">1</span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Abstellplatz</span>
-                  <span className="px-3 py-1 rounded bg-gray-100">4 Stellplätze</span>
+                  <span className="text-gray-500">Abstellplatz</span>
+                  <span className="px-3 py-1 rounded bg-gray-100 text-black">4 Stellplätze</span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Leerstand</span>
-                  <span className="px-3 py-1 rounded bg-gray-100">Nein</span>
+                  <span className="text-gray-500">Leerstand</span>
+                  <span className="px-3 py-1 rounded bg-gray-100 text-black">Nein</span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Befristungen</span>
-                  <span className="px-3 py-1 rounded bg-gray-100">Keine</span>
+                  <span className="text-gray-500">Befristungen</span>
+                  <span className="px-3 py-1 rounded bg-gray-100 text-black">Keine</span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Unbefristete Vermietung</span>
-                  <span className="px-3 py-1 rounded bg-gray-100">Ja</span>
+                  <span className="text-gray-500">Unbefristete Vermietung</span>
+                  <span className="px-3 py-1 rounded bg-gray-100 text-black">Ja</span>
                 </div>
               </div>
             </div>
