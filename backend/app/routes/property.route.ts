@@ -1,6 +1,6 @@
 import { roleAuth } from "@middlewares/role-auth.middleware";
 import { Router } from "express";
-import * as propertyController from "./property.controller";
+import * as propertyController from "@controllers/property.controller";
 import multer from "multer";
 import path from "path";
 import fs from "fs";

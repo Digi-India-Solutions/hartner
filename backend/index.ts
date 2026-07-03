@@ -7,20 +7,20 @@ import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import swaggerUi from "swagger-ui-express";
 
-import { loadConfig } from "@/common/helper/config.helper";
+import { loadConfig } from "@helpers/config.helper";
 loadConfig();
 
-import { logger } from "@/common/helper/logger.helper";
-import { swaggerSpec } from "@/common/helper/swagger.helper";
-import routes from "@/routes";
-import { type IUser } from "@/user/user.dto";
+import { logger } from "@helpers/logger.helper";
+import { swaggerSpec } from "@helpers/swagger.helper";
+import routes from "@routes";
+import { type IUser } from "@dtos/user.dto";
 import errorHandler from "@middlewares/error-handler.middleware";
 import { globalLimiter } from "@middlewares/rate-limit.middleware";
 import { initDB } from "@services/database.service";
 import { initPassport } from "@services/passport-jwt.service";
 import path from "path";
-import { runPropertySeeder } from "@/property/property.seeder";
-import { ensureDefaultAdminUser } from "@/user/user.seeder";
+import { runPropertySeeder } from "@seeders/property.seeder";
+import { ensureDefaultAdminUser } from "@seeders/user.seeder";
 
 declare global {
   namespace Express {

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { type IProperty } from "./property.dto";
+import { type IProperty } from "@dtos/property.dto";
 
 const Schema = mongoose.Schema;
 

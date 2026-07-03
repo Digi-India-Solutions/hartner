@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import PageSchema from "./page.schema";
+import PageSchema from "@models/page.model";
 import createHttpError from "http-errors";
 
 // GET /api/pages/:slug

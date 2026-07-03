@@ -1,6 +1,6 @@
 import { body, checkExact } from "express-validator";
-import { ProviderType } from "./user.dto";
-import * as userService from "./user.service";
+import { ProviderType } from "@dtos/user.dto";
+import * as userService from "@services/user.service";
 
 export const login = checkExact([
   body("email")

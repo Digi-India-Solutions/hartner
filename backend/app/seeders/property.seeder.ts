@@ -1,4 +1,4 @@
-import PropertySchema from "./property.schema";
+import PropertySchema from "@models/property.model";
 
 export const runPropertySeeder = async (): Promise<void> => {
   try {

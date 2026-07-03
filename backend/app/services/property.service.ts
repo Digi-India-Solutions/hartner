@@ -1,5 +1,5 @@
-import { type IProperty } from "./property.dto";
-import PropertySchema from "./property.schema";
+import { type IProperty } from "@dtos/property.dto";
+import PropertySchema from "@models/property.model";
 
 export const createProperty = async (
   data: Omit<IProperty, "_id" | "createdAt" | "updatedAt">
@@ -39,6 +39,6 @@ export const countProperties = async (filter: any = {}) => {
   return await PropertySchema.countDocuments(filter);
 };
 export const getNextDisplayOrder = async (): Promise<number> => {
-  const last = await PropertySchema.findOne().sort({ displayOrder: -1 }).select("displayOrder").lean();
-  return last ? (last.displayOrder + 1) : 1;
+  const last = await PropertySchema.findOne().sort({ sort_order: -1 }).select("sort_order").lean();
+  return last ? (last.sort_order + 1) : 1;
 };

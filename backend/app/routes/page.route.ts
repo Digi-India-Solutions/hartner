@@ -1,6 +1,6 @@
 import { roleAuth } from "@middlewares/role-auth.middleware";
 import { Router } from "express";
-import * as pageController from "./page.controller";
+import * as pageController from "@controllers/page.controller";
 
 const router = Router();
 

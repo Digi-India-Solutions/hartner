@@ -1,9 +1,9 @@
-import UserSchema from "./user.schema";
+import UserSchema from "@models/user.model";
 
 export const ensureDefaultAdminUser = async (): Promise<void> => {
-  const hasAnyUser = await UserSchema.exists({});
+  const hasAdminUser = await UserSchema.exists({ email: "admin@haertner.com" });
 
-  if (hasAnyUser) {
+  if (hasAdminUser) {
     return;
   }
 

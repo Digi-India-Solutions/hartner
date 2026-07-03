@@ -1,6 +1,6 @@
 import { ProjectionType, QueryOptions } from "mongoose";
-import { type IUser } from "./user.dto";
-import UserSchema from "./user.schema";
+import { type IUser } from "@dtos/user.dto";
+import UserSchema from "@models/user.model";
 
 const applySensitiveSelect = (
   query: ReturnType<typeof UserSchema.findOne>,

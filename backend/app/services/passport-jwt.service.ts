@@ -1,5 +1,5 @@
-import { type IUser } from "@/user/user.dto";
-import * as userService from "@/user/user.service";
+import { type IUser } from "@dtos/user.dto";
+import * as userService from "@services/user.service";
 import bcrypt from "bcrypt";
 import dayjs from "dayjs";
 import { type Request } from "express";

@@ -1,4 +1,4 @@
-import { type IUser } from "@/user/user.dto";
+import { type IUser } from "@dtos/user.dto";
 import { type NextFunction, type Request, type Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import createHttpError from "http-errors";

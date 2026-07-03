@@ -2,8 +2,8 @@ import { catchError } from "@middlewares/cath-error.middleware";
 import { roleAuth } from "@middlewares/role-auth.middleware";
 import { Router } from "express";
 import passport from "passport";
-import * as userController from "./user.controller";
-import * as userValidator from "./user.validation";
+import * as userController from "@controllers/user.controller";
+import * as userValidator from "@validations/user.validation";
 
 const router = Router();
 

@@ -1,4 +1,4 @@
-import { type BaseSchema } from "@dto/base.dto";
+import { type BaseSchema } from "@dtos/base.dto";
 
 export interface IUser extends BaseSchema {
   name: string;

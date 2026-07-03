@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
-import PropertySchema from "./property.schema";
-import { type IProperty, type IPropertyImage } from "./property.dto";
+import PropertySchema from "@models/property.model";
+import { type IProperty, type IPropertyImage } from "@dtos/property.dto";
 import jwt from "jsonwebtoken";
 import process from "process";
 import fs from "fs";

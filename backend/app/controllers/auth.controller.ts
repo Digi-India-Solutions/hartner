@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import asyncHandler from "express-async-handler";
-import { createUserTokens } from "../common/services/passport-jwt.service";
-import * as userService from "../user/user.service";
+import { createUserTokens } from "@services/passport-jwt.service";
+import * as userService from "@services/user.service";
 
 export const login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("login", { session: false }, async (err: any, user: any, info: any) => {

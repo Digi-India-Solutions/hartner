@@ -11,9 +11,9 @@ import { type Request, type Response } from "express";
 import asyncHandler from "express-async-handler";
 import createHttpError from "http-errors";
 import verifyAppleToken from "verify-apple-id-token";
-import { ProviderType } from "./user.dto";
-import { hashPassword } from "./user.schema";
-import * as userService from "./user.service";
+import { ProviderType } from "@dtos/user.dto";
+import { hashPassword } from "@models/user.model";
+import * as userService from "@services/user.service";
 
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const result = await userService.createUser(req.body);
