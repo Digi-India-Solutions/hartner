@@ -1,7 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
-function LeistungenSection() {
+export default function LeistungenSection() {
   const leistungen = [
     {
       title: "Gewerbeimmobilien",
@@ -24,24 +26,21 @@ function LeistungenSection() {
     {
       title: "Wohnimmobilien",
       image: "/images/hausmit.jpeg",
-      description: "Ob exklusive Villa, gemütliche Wohnung oder Baugrundstück – wir finden Ihr neues Zuhause oder die passende Wohnimmobilie.",
+      description: "Villen, Wohnungen und Baugrundstücke für Eigennutzer und Familien.",
       link: "/immobilien/wohnimmobilien"
     }
   ];
 
   return (
-    <section
-  id="leistungen"
-  className="bg-white py-24 border-t border-gray-100"
->
-      <div className="max-w-[1600px] mx-auto px-6 md:px-10 lg:px-20">
+    <section id="properties" className="bg-[#fcfcfc] py-20 border-t border-gray-100 font-sans scroll-mt-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 xl:px-20">
         
         {/* Header */}
         <div className="mb-16">
-          <p className="text-yellow-600 text-sm font-semibold tracking-wider mb-4 uppercase">
-            Unsere Leistungen
-          </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-black leading-tight max-w-4xl">
+          <span className="text-[#c8a052] text-sm font-semibold tracking-widest block uppercase mb-4">
+            UNSERE LEISTUNGEN
+          </span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-gray-900 leading-tight max-w-4xl">
             Individuelle Lösungen für jede Immobilienentscheidung
           </h2>
         </div>
@@ -52,7 +51,7 @@ function LeistungenSection() {
             <Link 
               href={item.link} 
               key={index} 
-              className="group flex flex-col cursor-pointer transition-all duration-300"
+              className="group bg-white rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col cursor-pointer"
             >
               {/* Image Container with Zoom effect */}
               <div className="relative w-full aspect-[4/3] overflow-hidden bg-gray-100">
@@ -61,16 +60,16 @@ function LeistungenSection() {
                   alt={item.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="object-cover transition-transform duration-750 ease-out group-hover:scale-105"
                 />
               </div>
 
               {/* Text details */}
-              <div className="mt-6 flex flex-col flex-grow">
-                <h3 className="text-[26px] font-light text-black mb-4 group-hover:text-yellow-600 transition-colors duration-300">
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3 group-hover:text-[#c8a052] transition-colors duration-300">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-[16px] leading-8 font-light">
+                <p className="text-gray-600 text-sm leading-relaxed font-light">
                   {item.description}
                 </p>
               </div>
@@ -82,5 +81,3 @@ function LeistungenSection() {
     </section>
   );
 }
-
-export default LeistungenSection;

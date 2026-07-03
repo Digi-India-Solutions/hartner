@@ -1,52 +1,32 @@
-import {
-  FaBuilding,
-  FaMapMarkerAlt,
-  FaShieldAlt,
-  FaUser,
-} from "react-icons/fa";
+"use client";
 
-function Features() {
+import { ShieldCheck, User, Building, MapPin } from "lucide-react";
+
+export default function Features() {
+  const items = [
+    { icon: ShieldCheck, text: "20+ JAHRE ERFAHRUNG" },
+    { icon: User, text: "PERSÖNLICHE BETREUUNG" },
+    { icon: Building, text: "WOHN-, GEWERBE & INVESTMENTIMMOBILIEN" },
+    { icon: MapPin, text: "ÖSTERREICHWEITE EXPERTISE" },
+  ];
+
   return (
-    <section className="bg-black/10 backdrop-blur-md py-10 md:py-12">
-      <div className="max-w-[1700px] mx-auto px-6 md:px-10 lg:px-20">
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-
-          <div className="flex items-center gap-5">
-            <FaShieldAlt className="text-[#d4ad58] text-4xl flex-shrink-0" />
-            <h3 className="text-white text-lg font-semibold leading-7">
-              20+ JAHRE ERFAHRUNG
-            </h3>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <FaUser className="text-[#d4ad58] text-4xl flex-shrink-0" />
-            <h3 className="text-white text-lg font-semibold leading-7">
-              PERSÖNLICHE BETREUUNG
-            </h3>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <FaBuilding className="text-[#d4ad58] text-4xl flex-shrink-0" />
-            <h3 className="text-white text-lg font-semibold leading-7">
-              WOHN-, GEWERBE &
-              <br />
-              INVESTMENTIMMOBILIEN
-            </h3>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <FaMapMarkerAlt className="text-[#d4ad58] text-4xl flex-shrink-0" />
-            <h3 className="text-white text-lg font-semibold leading-7">
-              ÖSTERREICHWEITE EXPERTISE
-            </h3>
-          </div>
-
+    <section className="bg-[#1f242b] py-10 md:py-12 border-b border-white/5 font-sans">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 xl:px-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {items.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div key={idx} className="flex items-center gap-4 text-white hover:text-[#c8a052] transition-colors duration-300">
+                <Icon className="text-[#c8a052] text-3xl shrink-0" size={32} />
+                <span className="text-sm font-semibold tracking-wider leading-snug">
+                  {item.text}
+                </span>
+              </div>
+            );
+          })}
         </div>
-
       </div>
     </section>
   );
 }
-
-export default Features;

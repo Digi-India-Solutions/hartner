@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { BsGeoAltFill, BsArrowBarRight } from "react-icons/bs";
 import Link from "next/link";
 
 const categoryLabels = {
@@ -10,96 +10,136 @@ const categoryLabels = {
   mietobjekte: "Mietobjekte",
 };
 
-export default function PropertyCard({ property }) {
-  const firstImage =
-    property.images && property.images.length > 0
-      ? property.images[0].url
-      : null;
+// Helper to map card fields to display labels and values dynamically
+const getCardFeatures = (property) => {
+  const detailFields = property.details || {};
+  const cardKeys = property.card_fields && property.card_fields.length > 0
+    ? property.card_fields
+    : ["widmung", "leerstand", "befristungen", "unbefristete_vermietung"]; // default fallback
 
-  const price =
-    property.details?.kaufpreis || property.details?.miete_monatlich || null;
+  const labelMap = {
+    wohnflaeche: "Wohnfläche",
+    nutzflaeche: "Nutzfläche",
+    widmung: "Widmung",
+    grundflaeche: "Grundfläche",
+    leerstand: "Leerstand",
+    befristungen: "Befristungen",
+    unbefristete_vermietung: "Unbefr. Vermietung",
+    unbefristeteVermietung: "Unbefr. Vermietung",
+    bau_potenzial: "Baupotenzial",
+    bauPotenzial: "Baupotenzial",
+    balkon_terrassen: "Balkon/Terrassen",
+    balkonTerrassen: "Balkon/Terrassen",
+    eigengareten: "Eigengärten",
+    eigengaerten: "Eigengärten",
+    abstellplatz: "Abstellplatz",
+    ist_ertrag_netto: "Ist-Ertrag (netto)",
+    istErtragNetto: "Ist-Ertrag (netto)",
+    soll_ertrag_netto: "Soll-Ertrag (netto)",
+    sollErtragNetto: "Soll-Ertrag (netto)",
+    ist_netto_mietzins: "Ist-Nettomietzins",
+    durchschnittMietzins: "Ist-Nettomietzins",
+    rendite: "Rendite",
+    baujahr: "Baujahr",
+    heizung: "Heizung",
+    zustand: "Zustand",
+    hwb_fgee: "HWB / fGEE",
+    hwbFgee: "HWB / fGEE",
+    kaufpreis: "Kaufpreis",
+    miete_monatlich: "Miete",
+    mieteMonatlich: "Miete",
+  };
+
+  return cardKeys
+    .map((key) => {
+      // Resolve key in case it's in camelCase on admin side or snake_case on backend
+      let val = detailFields[key];
+      if (val === undefined) {
+        // Try alternate case
+        const snake = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+        const camel = key.replace(/([-_][a-z])/g, group => group.toUpperCase().replace('-', '').replace('_', ''));
+        val = detailFields[snake] !== undefined ? detailFields[snake] : detailFields[camel];
+      }
+
+      if (val === undefined || val === "") return null;
+
+      const label = labelMap[key] || key;
+      const formattedVal = (val === true || val === "true" || val === "Ja") ? "Ja" :
+                           (val === false || val === "false" || val === "Nein") ? "Nein" : val;
+      
+      return { label, value: formattedVal };
+    })
+    .filter(Boolean)
+    .slice(0, 4); // Show max 4 features on the card to keep layout clean
+};
+
+export default function PropertyCard({ property }) {
+  const getImageUrl = (url) => {
+    if (!url) return "/images/card.jpg";
+    if (url.startsWith("http") || url.startsWith("data:")) return url;
+    if (url.startsWith("/wp-content") || url.startsWith("/wp-includes")) {
+      return `https://hartner.digiindiasolutions.com${url}`;
+    }
+    return `http://localhost:8000${url}`;
+  };
+
+  const firstImage = property.images && property.images.length > 0
+    ? getImageUrl(property.images[0].url)
+
+    : "/images/card.jpg";
+
+
+  const price = property.details?.kaufpreis || property.details?.miete_monatlich || "Preis auf Anfrage";
+  const features = getCardFeatures(property);
 
   return (
-    <Link
-      href={`/immobilien/${property.id}`}
-      className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
-    >
-      {/* Image */}
-      <div className="relative w-full h-64 bg-gray-100 overflow-hidden">
-        {firstImage ? (
+    <Link href={`/immobilien/${property.id || property._id}`} className="block h-full">
+      <div className="property-card">
+        {/* Image */}
+        <div className="property-image">
           <img
             src={firstImage}
             alt={property.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 text-5xl">
-            🏠
-          </div>
-        )}
-
-        {/* Category Badge */}
-        <span className="absolute top-4 left-4 bg-[#c8a052] text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
-          {categoryLabels[property.category] || property.category}
-        </span>
-
-        {/* Status Badge */}
-        {property.status === "published" && (
-          <span className="absolute top-4 right-4 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-            Verfügbar
-          </span>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        <h3 className="text-xl font-serif text-black mb-2 group-hover:text-[#c8a052] transition-colors line-clamp-2">
-          {property.title}
-        </h3>
-
-        {property.address && (
-          <p className="text-gray-500 text-sm mb-3 flex items-center gap-1">
-            <span>📍</span> {property.address}
-          </p>
-        )}
-
-        {/* Details row */}
-        <div className="flex flex-wrap gap-3 mt-3 text-sm text-gray-600">
-          {property.details?.wohnflaeche && (
-            <span className="flex items-center gap-1">
-              🏠 {property.details.wohnflaeche} m²
-            </span>
-          )}
-          {property.details?.baujahr && (
-            <span className="flex items-center gap-1">
-              📅 Bj. {property.details.baujahr}
-            </span>
-          )}
-          {property.details?.heizung && (
-            <span className="flex items-center gap-1">
-              🔥 {property.details.heizung}
-            </span>
-          )}
         </div>
 
-        {/* Price */}
-        {price && (
-          <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-            <span className="text-[#c8a052] font-bold text-lg">{price}</span>
-            <span className="text-[#c8a052] text-sm font-semibold group-hover:underline">
-              Details →
-            </span>
+        {/* Content */}
+        <div className="property-content">
+          {/* Title + Price */}
+          <div className="property-header">
+            <h3>{property.title}</h3>
+            <span className="property-price">{price}</span>
           </div>
-        )}
 
-        {!price && (
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <span className="text-[#c8a052] text-sm font-semibold group-hover:underline">
-              Details anfordern →
-            </span>
-          </div>
-        )}
+          {/* Location */}
+          {property.address && (
+            <div className="property-location">
+              <BsGeoAltFill size={16} />
+              <span>{property.address}</span>
+            </div>
+          )}
+
+          {/* Dynamic features block */}
+          {features.length > 0 && (
+            <div className="property-features">
+              <div className="features-grid">
+                {features.map((feat, idx) => (
+                  <div key={idx} className="feature-col">
+                    <div className="feature-row">
+                      <BsArrowBarRight size={20} className="shrink-0 feature-icon" />
+                      <div className="feature-content">
+                        <p className="feature-label">{feat.label}</p>
+                        <p className="feature-value"><strong>{feat.value}</strong></p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </Link>
   );
 }
+

@@ -1,11 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { FaPhoneAlt } from "react-icons/fa";
+import { Phone, Mail } from "lucide-react";
 
-function Navbar() {
+export default function Navbar() {
   return (
-    <header className="fixed top-0 left-0 w-full z-50 text-white">
-      <div className="w-full px-4 md:px-8 lg:px-12 xl:px-20 py-4 md:py-6 flex items-center justify-between bg-black/60 backdrop-blur-md">
+    <header className="fixed top-0 left-0 w-full z-50 text-white font-sans">
+      <div className="w-full px-4 md:px-8 lg:px-12 xl:px-20 py-5 flex items-center justify-between bg-black/85 backdrop-blur-md border-b border-white/5">
 
         {/* Logo */}
         <div className="flex-shrink-0">
@@ -15,54 +17,57 @@ function Navbar() {
               alt="HARTNER Logo"
               width={200}
               height={44}
-            style={{ width: 'auto', height: 'auto' }}
-            className="w-auto h-[40px] md:h-[44px]"
-          />
+              priority
+              style={{ width: 'auto', height: 'auto' }}
+              className="w-auto h-[40px] md:h-[44px]"
+            />
           </Link>
         </div>
 
         {/* Menu */}
-        <ul className="hidden lg:flex gap-5 xl:gap-8 text-sm xl:text-base font-semibold flex-shrink-0">
+        <ul className="hidden lg:flex gap-6 xl:gap-10 text-sm font-semibold tracking-wider flex-shrink-0">
           <li>
-            <Link href="/" className="hover:text-yellow-500 transition-colors">IMMOBILIEN</Link>
+            <Link href="/immobilien" className="hover:text-[#c8a052] transition-colors duration-300">
+              IMMOBILIEN
+            </Link>
           </li>
-
           <li>
-            <Link href="/#leistungen" className="hover:text-yellow-500 transition-colors">LEISTUNGEN</Link>
+            <Link href="/#properties" className="hover:text-[#c8a052] transition-colors duration-300">
+              LEISTUNGEN
+            </Link>
           </li>
-
           <li>
-            <Link href="/#uber-uns" className="hover:text-yellow-500 transition-colors">ÜBER UNS</Link>
+            <Link href="/#about-us" className="hover:text-[#c8a052] transition-colors duration-300">
+              ÜBER UNS
+            </Link>
           </li>
-
           <li>
-  <a
-    href="#kontakt"
-    className="hover:text-yellow-500 transition-colors"
-  >
-    KONTAKT
-  </a>
-</li>
+            <Link href="/#contact" className="hover:text-[#c8a052] transition-colors duration-300">
+              KONTAKT
+            </Link>
+          </li>
         </ul>
 
-        {/* Right Side */}
-        <div className="hidden lg:flex items-center gap-4 xl:gap-6 flex-shrink-0">
-          <div className="flex items-center gap-2 xl:gap-3 text-sm xl:text-base">
-            <FaPhoneAlt className="text-yellow-500" />
+        {/* Right Side Info */}
+        <div className="hidden lg:flex items-center gap-4 xl:gap-8 flex-shrink-0">
+          <a
+            href="tel:+436644545404"
+            className="flex items-center gap-2 text-sm xl:text-base font-semibold hover:text-[#c8a052] transition-colors duration-300"
+          >
+            <Phone size={16} className="text-[#c8a052]" />
             <span>+43 664 - 45 45 404</span>
-          </div>
+          </a>
 
           <a
-  href="mailto:info@haertner-immobilien.at"
-  className="bg-yellow-400 text-black px-4 xl:px-6 py-2.5 xl:py-3 text-sm xl:text-base font-semibold hover:bg-yellow-500 transition-all duration-300 inline-block"
->
-  KONTAKT AUFNEHMEN
-</a>
+            href="mailto:gerold@hartner-immobilien.at"
+            className="bg-[#c8a052] hover:bg-[#b0893f] text-white px-5 py-3 text-sm font-semibold rounded-md flex items-center gap-2 shadow-sm transition-all duration-300"
+          >
+            <Mail size={16} />
+            <span>KONTAKT AUFNEHMEN</span>
+          </a>
         </div>
 
       </div>
     </header>
   );
 }
-
-export default Navbar;

@@ -1,51 +1,50 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
-function Footer() {
-    return (
-    <footer className="bg-black/10 backdrop-blur-md border-t border-white/10">
-      <div className="max-w-[1700px] mx-auto px-6 md:px-10 lg:px-20 py-8">
-
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-
+export default function Footer() {
+  return (
+    <footer className="bg-[#1f242b] border-t border-white/5 text-white font-sans">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 xl:px-20 py-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          
           {/* Logo */}
-          <div>
-            <Image
-              src="/images/logo1.jpeg"
-              alt="Hartner Immobilien"
-              width={250}
-              height={70}
-              className="object-contain"
-            />
+          <div className="flex-shrink-0">
+            <Link href="/">
+              <Image
+                src="/images/logo1.png"
+                alt="Hartner Immobilien Logo"
+                width={200}
+                height={44}
+                className="w-auto h-[40px] md:h-[44px] object-contain"
+              />
+            </Link>
           </div>
 
           {/* Links */}
-          <div className="flex gap-10">
-  <Link
-    href="/impressum"
-    className="hover:text-yellow-500 transition"
-  >
-    IMPRESSUM
-  </Link>
-
-  <Link
-    href="/datenschutz"
-    className="hover:text-yellow-500 transition"
-  >
-    DATENSCHUTZ
-  </Link>
-</div>
+          <div className="flex gap-8 text-sm font-semibold tracking-wider">
+            <Link
+              href="/impressum"
+              className="hover:text-[#c8a052] transition-colors duration-300"
+            >
+              IMPRESSUM
+            </Link>
+            <Link
+              href="/datenschutz"
+              className="hover:text-[#c8a052] transition-colors duration-300"
+            >
+              DATENSCHUTZ
+            </Link>
+          </div>
 
           {/* Copyright */}
-          <div className="text-gray-300 text-lg text-center lg:text-right">
+          <div className="text-gray-400 text-sm text-center md:text-right font-light">
             © 2026 Bei Haertner Immobilien stehen
           </div>
 
         </div>
-
       </div>
     </footer>
   );
 }
-
-export default Footer;

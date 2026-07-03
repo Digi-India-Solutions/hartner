@@ -1,38 +1,29 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
+import {
+  BsGeoAltFill,
+  BsHouseDoor,
+  BsLayerForward,
+  BsBoundingBox,
+  BsMap,
+  BsCalendar3,
+  BsFire,
+  BsBuilding,
+  BsTree,
+  BsFileEarmarkCheck,
+  BsInfoCircle,
+  BsShieldExclamation,
+  BsHammer,
+  BsCarFront,
+  BsEnvelopeOpenFill
+} from "react-icons/bs";
 
 const categoryLabels = {
   zinshaus: "Zinshaus",
   gewerbe: "Gewerbeimmobilien",
   haus_wohnen: "Wohnimmobilien",
   mietobjekte: "Mietobjekte",
-};
-
-const detailLabels = {
-  wohnflaeche: "Wohnfläche",
-  nutzflaeche: "Nutzfläche",
-  widmung: "Widmung",
-  grundflaeche: "Grundfläche",
-  befristungen: "Befristungen",
-  bau_potenzial: "Baupotenzial",
-  balkon_terrassen: "Balkon / Terrassen",
-  eigengareten: "Eigengärten",
-  abstellplatz: "Abstellplatz",
-  ist_ertrag_netto: "Ist-Ertrag (netto)",
-  soll_ertrag_netto: "Soll-Ertrag (netto)",
-  ist_netto_mietzins: "Ist-Nettomietzins",
-  rendite: "Rendite",
-  baujahr: "Baujahr",
-  heizung: "Heizung",
-  zustand: "Zustand",
-  hwb_fgee: "HWB / fGEE",
-  kaufpreis: "Kaufpreis",
-  miete_monatlich: "Miete monatlich",
 };
 
 export default function PropertyDetailPage({ params }) {
@@ -44,7 +35,7 @@ export default function PropertyDetailPage({ params }) {
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
@@ -76,7 +67,7 @@ export default function PropertyDetailPage({ params }) {
       <div className="min-h-screen flex items-center justify-center text-center px-4">
         <div>
           <p className="text-6xl mb-4">🏚️</p>
-          <h2 className="text-3xl font-serif text-black mb-2">Immobilie nicht gefunden</h2>
+          <h2 className="text-3xl font-serif text-black mb-2 font-bold">Immobilie nicht gefunden</h2>
           <p className="text-gray-500">Die gesuchte Immobilie existiert nicht oder wurde entfernt.</p>
           <a href="/immobilien" className="inline-block mt-6 bg-[#c8a052] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#b0893f] transition">
             Zurück zur Übersicht
@@ -89,166 +80,366 @@ export default function PropertyDetailPage({ params }) {
   const images = property.images || [];
   const details = property.details || {};
 
-  const filledDetails = Object.entries(detailLabels).filter(
-    ([key]) => details[key] && details[key] !== ""
-  );
+  const getImageUrl = (img) => {
+    if (!img) return "/images/card.jpg";
+    const url = typeof img === "string" ? img : img.url;
+    if (!url) return "/images/card.jpg";
+    if (url.startsWith("http") || url.startsWith("data:")) return url;
+    if (url.startsWith("/wp-content") || url.startsWith("/wp-includes")) {
+      return `https://hartner.digiindiasolutions.com${url}`;
+    }
+    return `http://localhost:8000${url}`;
+  };
+
+
+  const formatValue = (val) => {
+    if (val === true || val === "true" || val === "Ja") return "Ja";
+    if (val === false || val === "false" || val === "Nein") return "Nein";
+    return val || "-";
+  };
+
+  // Sections groupings
+  const flaechenConfig = [
+    { key: "wohnflaeche", label: "Wohnfläche", icon: BsHouseDoor },
+    { key: "nutzflaeche", label: "Nutzfläche", icon: BsLayerForward },
+    { key: "grundflaeche", label: "Grundfläche", icon: BsBoundingBox },
+    { key: "widmung", label: "Widmung", icon: BsMap },
+  ];
+
+  const objektdatenConfig = [
+    { key: "baujahr", label: "Baujahr", icon: BsCalendar3 },
+    { key: "heizung", label: "Heizung", icon: BsFire },
+    { key: "zustand", label: "Zustand", icon: BsInfoCircle },
+    { key: "hwb_fgee", label: "HWB / fGEE", icon: BsShieldExclamation },
+    { key: "bau_potenzial", label: "Baupotenzial", icon: BsHammer },
+    { key: "abstellplatz", label: "Abstellplatz", icon: BsCarFront },
+  ];
+
+  const filledFlaechen = flaechenConfig.filter(cfg => details[cfg.key] && details[cfg.key] !== "");
+  const filledObjektdaten = objektdatenConfig.filter(cfg => details[cfg.key] && details[cfg.key] !== "");
+
+  const hasFlaechen = filledFlaechen.length > 0;
+  const hasObjektdaten = filledObjektdaten.length > 0;
+
+  const hasFinanzen = details.rendite || details.ist_ertrag_netto || details.soll_ertrag_netto || details.ist_netto_mietzins;
+  const hasFinanzenRows = details.ist_ertrag_netto || details.soll_ertrag_netto || details.ist_netto_mietzins;
+
+  const hasAusstattung = details.balkon_terrassen || details.eigengareten || details.unbefristete_vermietung || details.leerstand || details.befristungen;
 
   return (
-    <div className="bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-32 md:pt-36 pb-16">
+    <section className="property-details-page font-sans">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
 
-        {/* Header */}
-        <div className="mb-10">
-          <p className="text-[#c8a052] uppercase tracking-widest text-sm font-semibold mb-2">
-            {categoryLabels[property.category] || property.category}
-          </p>
-          <h1 className="text-4xl md:text-5xl font-serif leading-tight text-black">
-            {property.title}
-          </h1>
-          {property.address && (
-            <p className="text-gray-500 mt-3 text-lg flex items-center gap-2">
-              <span>📍</span> {property.address}
-            </p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-
-          {/* Left: Images */}
-          <div className="xl:col-span-3">
-            {images.length > 0 ? (
-              <>
-                <Swiper
-                  navigation
-                  modules={[Navigation]}
-                  initialSlide={activeIndex}
-                  onSlideChange={(s) => setActiveIndex(s.activeIndex)}
-                  className="rounded-3xl overflow-hidden"
-                >
-                  {images.map((img, i) => (
-                    <SwiperSlide key={img.id || i}>
-                      <img
-                        src={img.url}
-                        alt={`${property.title} - Bild ${i + 1}`}
-                        className="w-full h-[300px] sm:h-[450px] lg:h-[600px] object-cover rounded-3xl"
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-
-                {images.length > 1 && (
-                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mt-4">
-                    {images.map((img, i) => (
-                      <img
-                        key={img.id || i}
-                        src={img.url}
-                        alt=""
-                        onClick={() => setActiveIndex(i)}
-                        className={`h-20 w-full object-cover rounded-xl cursor-pointer border-4 transition-all ${
-                          activeIndex === i ? "border-[#c8a052]" : "border-transparent"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="w-full h-64 rounded-3xl bg-gray-100 flex items-center justify-center text-6xl text-gray-300">
-                🏠
-              </div>
+        {/* 1. OBJEKT-HEADER (Titel, Ort & Preise) */}
+        <div className="property-header flex flex-col md:flex-row justify-between items-start md:items-end gap-3 mb-8 pb-8 border-b border-gray-200">
+          <div className="header-main">
+            <span className="badge-status mb-2">Immobilienangebot</span>
+            <h1 className="property-title fw-bold text-dark m-0 font-serif">
+              {property.title}
+            </h1>
+            {property.address && (
+              <p className="property-location text-muted m-0 mt-2 flex items-center gap-2">
+                <BsGeoAltFill className="text-gold" size={16} />
+                <span>{property.address}</span>
+              </p>
             )}
           </div>
 
-          {/* Right: Contact Box */}
-          <div className="bg-[#1f242b] text-white rounded-3xl p-8 xl:p-10 h-fit xl:sticky xl:top-36 flex flex-col gap-6">
+          <div className="price-tag md:text-right shrink-0">
             {details.kaufpreis && (
-              <div>
-                <p className="text-gray-400 text-sm uppercase tracking-wide">Kaufpreis</p>
-                <p className="text-[#c8a052] text-3xl font-bold mt-1">{details.kaufpreis}</p>
+              <div className="mb-3">
+                <span className="price-label text-muted text-uppercase small d-block">Kaufpreis</span>
+                <div className="property-price fw-bold text-gold text-2xl md:text-3xl m-0">{details.kaufpreis}</div>
               </div>
             )}
             {details.miete_monatlich && (
-              <div>
-                <p className="text-gray-400 text-sm uppercase tracking-wide">Miete monatlich</p>
-                <p className="text-[#c8a052] text-3xl font-bold mt-1">{details.miete_monatlich}</p>
+              <div className="mb-3">
+                <span className="price-label text-muted text-uppercase small d-block">Miete monatlich</span>
+                <div className="property-price fw-bold text-gold text-2xl md:text-3xl m-0">{details.miete_monatlich}</div>
               </div>
             )}
-
-            <h2 className="text-2xl font-serif">Interesse geweckt?</h2>
-            <p className="text-gray-300 leading-7 text-sm">
-              Fordern Sie jetzt das Exposé an oder vereinbaren Sie einen Besichtigungstermin.
-            </p>
-            <button
-              onClick={() => setOpenModal(true)}
-              className="w-full bg-[#c8a052] hover:bg-[#b0893f] transition py-4 rounded-xl text-lg font-semibold"
-            >
-              Exposé anfordern
-            </button>
+            {!details.kaufpreis && !details.miete_monatlich && (
+              <div className="mb-3">
+                <span className="price-label text-muted text-uppercase small d-block">Preis</span>
+                <div className="property-price fw-bold text-gold text-2xl md:text-3xl m-0">Preis auf Anfrage</div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Description */}
-        {property.description && (
-          <div className="mt-16 bg-white rounded-3xl border border-gray-200 p-8 md:p-12">
-            <h2 className="text-3xl font-serif mb-3 text-black">Objektbeschreibung</h2>
-            <div className="w-14 h-1 bg-[#c8a052] mb-6" />
-            <p className="text-gray-600 text-lg leading-9 whitespace-pre-line">
-              {property.description}
-            </p>
-          </div>
-        )}
+        {/* 2. HAUPTLAYOUT GRID (Split-Ansicht) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-        {/* Details Grid */}
-        {filledDetails.length > 0 && (
-          <div className="mt-8 bg-white rounded-3xl border border-gray-200 p-8 md:p-12">
-            <h2 className="text-3xl font-serif mb-3 text-black">Objektdaten</h2>
-            <div className="w-14 h-1 bg-[#c8a052] mb-8" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filledDetails.map(([key, label]) => (
-                <div key={key} className="border rounded-2xl p-5 flex flex-col gap-1">
-                  <p className="text-gray-500 text-sm">{label}</p>
-                  <p className="text-black font-semibold text-lg">{details[key]}</p>
+          {/* Linke Spalte: Medien, Beschreibung & Objektdaten */}
+          <div className="lg:col-span-8 flex flex-col gap-8">
+
+            {/* Media Gallery (Hero image + Thumbnail state switcher) */}
+            <div>
+              <div className="property-hero-image w-full h-[300px] sm:h-[400px] md:h-[480px] rounded-3xl overflow-hidden shadow-sm bg-gray-50 border border-gray-100 flex items-center justify-center">
+                {images.length > 0 ? (
+                  <img
+                    id="mainPropertyImage"
+                    src={getImageUrl(images[activeIndex])}
+                    alt={`${property.title} - Bild ${activeIndex + 1}`}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <div className="text-6xl text-gray-300">🏠</div>
+                )}
+              </div>
+
+              {images.length > 1 && (
+                <div className="property-gallery flex gap-3 flex-wrap mt-4">
+                  {images.map((img, i) => (
+                    <img
+                      key={img.id || i}
+                      src={getImageUrl(img)}
+                      alt=""
+                      onClick={() => setActiveIndex(i)}
+                      className={`gallery-thumb ${activeIndex === i ? "active" : ""}`}
+                    />
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
+
+            {/* Objektbeschreibung */}
+            {property.description && (
+              <div className="detail-card bg-white p-6 md:p-8 rounded-3xl border shadow-xs mb-4">
+                <h3 className="detail-title fw-bold mb-3 position-relative pb-2 text-xl font-serif">
+                  Objektbeschreibung
+                </h3>
+                <div className="description-text text-secondary leading-relaxed text-base md:text-lg whitespace-pre-line mt-4">
+                  {property.description}
+                </div>
+              </div>
+            )}
+
+            {/* KATEGORIE: FLÄCHEN & EINHEITEN */}
+            {hasFlaechen && (
+              <div className="detail-card bg-white p-6 md:p-8 rounded-3xl border shadow-xs mb-4">
+                <h3 className="detail-title fw-bold mb-4 position-relative pb-2 text-xl font-serif">
+                  Flächen & Einheiten
+                </h3>
+                <div className="info-grid mt-4">
+                  {filledFlaechen.map(({ key, label, icon: Icon }) => (
+                    <div key={key} className="info-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl border">
+                      <div className="info-icon rounded-full bg-white border flex items-center justify-center text-gold w-11 h-11 shrink-0">
+                        <Icon size={20} />
+                      </div>
+                      <div className="info-text">
+                        <span className="info-label text-muted small block text-xs font-semibold text-gray-500 uppercase tracking-wider">{label}</span>
+                        <span className="info-value fw-bold text-dark text-lg">{details[key]}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* KATEGORIE: OBJEKTDATEN & ZUSTAND */}
+            {hasObjektdaten && (
+              <div className="detail-card bg-white p-6 md:p-8 rounded-3xl border shadow-xs mb-4">
+                <h3 className="detail-title fw-bold mb-4 position-relative pb-2 text-xl font-serif">
+                  Objektdaten & Zustand
+                </h3>
+                <div className="info-grid mt-4">
+                  {filledObjektdaten.map(({ key, label, icon: Icon }) => (
+                    <div key={key} className="info-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl border">
+                      <div className="info-icon rounded-full bg-white border flex items-center justify-center text-gold w-11 h-11 shrink-0">
+                        <Icon size={20} />
+                      </div>
+                      <div className="info-text">
+                        <span className="info-label text-muted small block text-xs font-semibold text-gray-500 uppercase tracking-wider">{label}</span>
+                        <span className="info-value fw-bold text-dark text-lg">{details[key]}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
-        )}
+
+          {/* Rechte Spalte: Finanzen, Vermietung & Ausstattung (Sticky Sidebar) */}
+          <div className="lg:col-span-4 lg:sticky lg:top-36 flex flex-col gap-6">
+
+            {/* FINANZEN & RENDITE */}
+            {hasFinanzen && (
+              <div className="sidebar-card bg-white p-6 rounded-3xl border shadow-xs">
+                <h3 className="detail-title-sm text-dark fw-bold mb-3 text-xs uppercase tracking-widest text-gray-400">
+                  Finanzen & Rendite
+                </h3>
+
+                {details.rendite && (
+                  <div className="rendite-box text-center p-3 mb-3 rounded-xl border border-dashed border-emerald-600 bg-emerald-50/20">
+                    <span className="text-muted small block text-xs text-gray-500 mb-1 font-semibold">Erwartete Rendite</span>
+                    <span className="fw-bold text-xl text-emerald-700 font-serif">{details.rendite}</span>
+                  </div>
+                )}
+
+                {hasFinanzenRows && (
+                  <div className="flex flex-col gap-1">
+                    {details.ist_ertrag_netto && (
+                      <div className="flex justify-between items-center py-2 border-b border-light">
+                        <span className="text-secondary small">Ist-Ertrag (netto)</span>
+                        <span className="fw-bold text-dark">{details.ist_ertrag_netto}</span>
+                      </div>
+                    )}
+                    {details.soll_ertrag_netto && (
+                      <div className="flex justify-between items-center py-2 border-b border-light">
+                        <span className="text-secondary small">Soll-Ertrag (netto)</span>
+                        <span className="fw-bold text-dark">{details.soll_ertrag_netto}</span>
+                      </div>
+                    )}
+                    {details.ist_netto_mietzins && (
+                      <div className="flex justify-between items-center py-2 border-b border-light">
+                        <span className="text-secondary small">Ø Ist-Nettomietzins</span>
+                        <span className="fw-bold text-dark">{details.ist_netto_mietzins}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* AUSSTATTUNG & BELEGUNG */}
+            {hasAusstattung && (
+              <div className="sidebar-card bg-white p-6 rounded-3xl border shadow-xs">
+                <h3 className="detail-title-sm text-dark fw-bold mb-3 text-xs uppercase tracking-widest text-gray-400">
+                  Ausstattung & Belegung
+                </h3>
+                <ul className="flex flex-col gap-3">
+                  {details.balkon_terrassen && (
+                    <li className="flex justify-between items-center">
+                      <span className="text-secondary flex items-center gap-2 small">
+                        <BsBuilding size={16} className="text-gold" />
+                        Balkon / Terrassen
+                      </span>
+                      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+                        {details.balkon_terrassen}
+                      </span>
+                    </li>
+                  )}
+                  {details.eigengareten && (
+                    <li className="flex justify-between items-center">
+                      <span className="text-secondary flex items-center gap-2 small">
+                        <BsTree size={16} className="text-gold" />
+                        Eigengärten
+                      </span>
+                      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+                        {details.eigengareten}
+                      </span>
+                    </li>
+                  )}
+                  {details.unbefristete_vermietung && (
+                    <li className="flex justify-between items-center">
+                      <span className="text-secondary flex items-center gap-2 small">
+                        <BsFileEarmarkCheck size={16} className="text-gold" />
+                        Unbefristete Vermietung
+                      </span>
+                      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+                        {formatValue(details.unbefristete_vermietung)}
+                      </span>
+                    </li>
+                  )}
+                  {details.leerstand && (
+                    <li className="flex justify-between items-center">
+                      <span className="text-secondary flex items-center gap-2 small">
+                        <BsInfoCircle size={16} className="text-gold" />
+                        Leerstand
+                      </span>
+                      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+                        {formatValue(details.leerstand)}
+                      </span>
+                    </li>
+                  )}
+                  {details.befristungen && (
+                    <li className="flex justify-between items-center">
+                      <span className="text-secondary flex items-center gap-2 small">
+                        <BsShieldExclamation size={16} className="text-gold" />
+                        Befristungen
+                      </span>
+                      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+                        {details.befristungen}
+                      </span>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            {/* KONTAKT / INTERESSE WIDGET */}
+            <div className="sidebar-card bg-dark text-white p-6 rounded-3xl border-0 shadow-sm flex flex-col gap-4">
+              <h4 className="text-xl font-serif font-bold text-white">Interesse geweckt?</h4>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Fordern Sie jetzt das unverbindliche Exposé an oder vereinbaren Sie einen persönlichen Besichtigungstermin.
+              </p>
+              <button
+                onClick={() => setOpenModal(true)}
+                className="btn btn-gold w-100 py-3 fw-bold text-white border-0 rounded-xl shadow-xs flex items-center justify-center gap-2 cursor-pointer font-sans"
+              >
+                <BsEnvelopeOpenFill size={16} />
+                <span>kontakt</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
       </div>
 
       {/* Inquiry Modal */}
       {openModal && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
-          <div className="bg-white w-full max-w-xl rounded-3xl p-8 relative shadow-2xl">
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center overflow-y-auto p-4 md:p-8 contact-modal-overlay">
+          <div className="bg-white w-full max-w-xl rounded-3xl p-8 relative shadow-2xl border-0 my-auto">
             <button
               onClick={() => { setOpenModal(false); setSent(false); }}
-              className="absolute top-5 right-5 text-3xl text-black hover:text-[#c8a052]"
+              className="absolute top-5 right-5 text-3xl text-gray-400 hover:text-black transition cursor-pointer leading-none"
             >
               ×
             </button>
-            <h2 className="text-3xl font-serif mb-6 text-black">Anfrage senden</h2>
+            <h2 className="text-3xl font-serif font-bold mb-6 text-black border-b border-gray-100 pb-3">Kontakt aufnehmen</h2>
             {sent ? (
               <div className="text-center py-8">
                 <p className="text-5xl mb-4">✅</p>
                 <p className="text-xl font-semibold text-black">Vielen Dank!</p>
-                <p className="text-gray-500 mt-2">Wir melden uns in Kürze bei Ihnen.</p>
+                <p className="text-gray-500 mt-2">Wir haben Ihre Nachricht erhalten und melden uns in Kürze bei Ihnen.</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                <input type="text" placeholder="Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="w-full border p-4 rounded-xl text-black" />
-                <input type="email" placeholder="E-Mail" value={form.email} onChange={e => setForm({...form, email: e.target.value})} className="w-full border p-4 rounded-xl text-black" />
-                <input type="tel" placeholder="Telefon" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="w-full border p-4 rounded-xl text-black" />
-                <textarea rows="4" placeholder="Nachricht" value={form.message} onChange={e => setForm({...form, message: e.target.value})} className="w-full border p-4 rounded-xl text-black" />
+              <div className="contact-form-box space-y-4">
+                <div>
+                  <label>Ihr Name *</label>
+                  <input type="text" placeholder="z. B. Max Mustermann" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+                </div>
+                <div>
+                  <label>E-Mail-Adresse *</label>
+                  <input type="email" placeholder="z. B. max@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+                </div>
+                <div>
+                  <label>Telefonnummer *</label>
+                  <input type="tel" placeholder="z. B. +43 664 1234567" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+                </div>
+                <div>
+                  <label>Betreff *</label>
+                  <input type="text" placeholder={`Anfrage zu ${property.title}`} value={form.subject || `Anfrage zu ${property.title}`} onChange={e => setForm({...form, subject: e.target.value})} />
+                </div>
+                <div>
+                  <label>Ihre Nachricht</label>
+                  <textarea rows="4" placeholder="Schreiben Sie uns Ihre Nachricht..." value={form.message} onChange={e => setForm({...form, message: e.target.value})} />
+                </div>
                 <button
                   onClick={() => setSent(true)}
-                  className="w-full bg-[#c8a052] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#b0893f] transition"
+                  className="contact-form-submit"
                 >
-                  Anfrage senden
+                  Nachricht senden
                 </button>
               </div>
             )}
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }
+

@@ -1,176 +1,155 @@
 "use client";
 
 import { useState } from "react";
-import {
-  FaEnvelope,
-  FaGlobe,
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-  FaTimes,
-} from "react-icons/fa";
+import { MapPin, Phone, Mail, Globe, MailOpen } from "lucide-react";
 
-function ContactSection() {
-  const [showPopup, setShowPopup] = useState(false);
+export default function ContactSection() {
+  const [openModal, setOpenModal] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
+  const [sent, setSent] = useState(false);
 
   return (
     <section
-    id="kontakt"
-      className="py-20 relative"
-      style={{
-        backgroundImage: "url('/images/hero-4.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      id="contact"
+      className="py-20 relative font-sans scroll-mt-20 overflow-hidden bg-black"
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/65"></div>
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-30"
+        style={{
+          backgroundImage: "url('https://hartner.digiindiasolutions.com/wp-content/themes/hartner-theme/images/slavia.jpeg')",
+        }}
+      />
+      <div className="absolute inset-0 bg-black/60" />
 
-      <div className="relative z-10 max-w-[1700px] mx-auto px-6 md:px-10 lg:px-24">
-
-        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-16 items-center">
-
-          {/* Left Content */}
-          <div className="text-white lg:pl-10">
-
-            <p className="text-yellow-400 font-semibold mb-5">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 lg:px-12 xl:px-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Left Content (col-span-8) */}
+          <div className="lg:col-span-8 text-white">
+            <span className="text-[#c8a052] text-sm font-semibold tracking-widest block uppercase mb-4">
               KONTAKT
-            </p>
-
-            <h2 className="text-4xl md:text-5xl lg:text-6xl leading-tight mb-8">
-              Lassen Sie uns über
-              <br />
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
+              Lassen Sie uns über <br />
               Ihre Immobilie sprechen
             </h2>
-
-            <p className="text-lg md:text-xl text-gray-200 leading-10 mb-10">
-              Ob Verkauf, Kauf, Vermietung oder Investment –
-              wir sind für Sie da. Diskret, persönlich und
-              mit vollem Einsatz.
+            <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-2xl mb-10">
+              Ob Verkauf, Kauf, Vermietung oder Investment – wir sind für Sie da. Diskret, persönlich und mit vollem Einsatz.
             </p>
-
             <button
-              onClick={() => setShowPopup(true)}
-              className="bg-yellow-600 text-black px-10 py-5 font-semibold hover:bg-yellow-500 transition"
+              onClick={() => setOpenModal(true)}
+              className="bg-[#c8a052] hover:bg-[#b0893f] text-white px-8 py-4 text-base font-semibold rounded-lg shadow-md transition-all duration-300 cursor-pointer"
             >
               JETZT KONTAKT AUFNEHMEN
             </button>
-
           </div>
 
-          {/* Contact Info Box */}
-          <div className="bg-white p-8 md:p-10">
-
-            <div className="flex gap-5 mb-10">
-              <FaMapMarkerAlt className="text-yellow-600 text-3xl mt-1" />
-              <p className="text-xl text-black font-medium">
-                Hoher Markt 17
-                <br />
-                A-3340 Waidhofen/Ybbs
-              </p>
+          {/* Right Info Box (col-span-4) */}
+          <div className="lg:col-span-4 bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 flex flex-col gap-8">
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-lg bg-[#c8a052]/10 flex items-center justify-center text-[#c8a052] shrink-0 mt-1">
+                <MapPin size={20} />
+              </div>
+              <div>
+                <h6 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">Adresse</h6>
+                <p className="text-gray-900 font-medium leading-relaxed">
+                  Hoher Markt 17 <br />
+                  A-3340 Waidhofen/Ybbs
+                </p>
+              </div>
             </div>
 
-            <div className="flex gap-5 mb-10">
-              <FaPhoneAlt className="text-yellow-600 text-3xl mt-1" />
-              <p className="text-xl text-black font-medium">
-                +43 664 123 45 67
-              </p>
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-lg bg-[#c8a052]/10 flex items-center justify-center text-[#c8a052] shrink-0 mt-1">
+                <Phone size={20} />
+              </div>
+              <div>
+                <h6 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">Telefon</h6>
+                <a href="tel:+436644545404" className="text-[#c8a052] hover:underline font-semibold leading-relaxed">
+                  +43 664 - 45 45 404
+                </a>
+              </div>
             </div>
 
-            <div className="flex gap-5 mb-10">
-              <FaEnvelope className="text-yellow-600 text-3xl mt-1" />
-              <p className="text-xl text-black font-medium">
-                office@hartner.at
-              </p>
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-lg bg-[#c8a052]/10 flex items-center justify-center text-[#c8a052] shrink-0 mt-1">
+                <Mail size={20} />
+              </div>
+              <div>
+                <h6 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">E-Mail</h6>
+                <a href="mailto:gerold@hartner-immobilien.at" className="text-gray-900 hover:text-[#c8a052] transition-colors font-medium leading-relaxed break-all">
+                  gerold@hartner-immobilien.at
+                </a>
+              </div>
             </div>
 
-            <div className="flex gap-5">
-              <FaGlobe className="text-yellow-600 text-3xl mt-1" />
-              <p className="text-xl text-black font-medium">
-                www.hartner-immobilien.at
-              </p>
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-lg bg-[#c8a052]/10 flex items-center justify-center text-[#c8a052] shrink-0 mt-1">
+                <Globe size={20} />
+              </div>
+              <div>
+                <h6 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">Website</h6>
+                <a href="https://www.hartner-immobilien.at" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-[#c8a052] transition-colors font-medium leading-relaxed">
+                  www.hartner-immobilien.at
+                </a>
+              </div>
             </div>
-
           </div>
 
         </div>
       </div>
 
-      {/* Popup Form */}
-      {showPopup && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-
-          <div className="bg-white w-full max-w-2xl relative">
-
-            {/* Header */}
-            <div className="flex justify-between items-center border-b px-8 py-6">
-
-              <h2 className="text-4xl text-black font-light">
-                Kontakt aufnehmen
-              </h2>
-
-              <button
-                onClick={() => setShowPopup(false)}
-                className="text-gray-500 text-4xl hover:text-black"
-              >
-                <FaTimes />
-              </button>
-
-            </div>
-
-            {/* Form */}
-            <form className="p-8 md:p-12">
-
-              <label className="block text-xl text-black mb-3">
-                Your name
-              </label>
-
-              <input
-                type="text"
-                className="w-full border border-gray-300 p-5 mb-8 text-black outline-none"
-              />
-
-              <label className="block text-xl text-black mb-3">
-                Your email
-              </label>
-
-              <input
-                type="email"
-                className="w-full border border-gray-300 p-5 mb-8 text-black outline-none"
-              />
-
-              <label className="block text-xl text-black mb-3">
-                Subject
-              </label>
-
-              <input
-                type="text"
-                className="w-full border border-gray-300 p-5 mb-8 text-black outline-none"
-              />
-
-              <label className="block text-xl text-black mb-3">
-                Your message (optional)
-              </label>
-
-              <textarea
-                rows="5"
-                className="w-full border border-gray-300 p-5 mb-8 text-black outline-none resize-none"
-              ></textarea>
-
-              <button
-                type="submit"
-                className="w-full bg-yellow-600 text-white py-5 text-2xl font-semibold hover:bg-yellow-500 transition"
-              >
-                Submit
-              </button>
-
-            </form>
-
+      {/* Inquiry Modal */}
+      {openModal && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
+          <div className="bg-white w-full max-w-xl rounded-3xl p-8 relative shadow-2xl">
+            <button
+              onClick={() => { setOpenModal(false); setSent(false); }}
+              className="absolute top-5 right-5 text-3xl text-gray-500 hover:text-black transition cursor-pointer"
+            >
+              ×
+            </button>
+            <h2 className="text-3xl font-serif font-bold mb-6 text-black">Kontakt aufnehmen</h2>
+            {sent ? (
+              <div className="text-center py-8">
+                <p className="text-5xl mb-4">✅</p>
+                <p className="text-xl font-semibold text-black">Vielen Dank!</p>
+                <p className="text-gray-500 mt-2">Wir haben Ihre Nachricht erhalten und melden uns in Kürze bei Ihnen.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 font-sans">Ihr Name *</label>
+                  <input type="text" placeholder="z. B. Max Mustermann" value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="w-full border border-gray-200 p-4 rounded-xl text-black bg-white focus:outline-none focus:ring-2 focus:ring-[#c8a052] font-sans" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 font-sans">E-Mail-Adresse *</label>
+                  <input type="email" placeholder="z. B. max@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} className="w-full border border-gray-200 p-4 rounded-xl text-black bg-white focus:outline-none focus:ring-2 focus:ring-[#c8a052] font-sans" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 font-sans">Telefonnummer *</label>
+                  <input type="tel" placeholder="z. B. +43 664 1234567" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="w-full border border-gray-200 p-4 rounded-xl text-black bg-white focus:outline-none focus:ring-2 focus:ring-[#c8a052] font-sans" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 font-sans">Betreff *</label>
+                  <input type="text" placeholder="z. B. Allgemeine Anfrage" value={form.subject} onChange={e => setForm({...form, subject: e.target.value})} className="w-full border border-gray-200 p-4 rounded-xl text-black bg-white focus:outline-none focus:ring-2 focus:ring-[#c8a052] font-sans" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 font-sans">Ihre Nachricht</label>
+                  <textarea rows="4" placeholder="Schreiben Sie uns Ihre Nachricht..." value={form.message} onChange={e => setForm({...form, message: e.target.value})} className="w-full border border-gray-200 p-4 rounded-xl text-black bg-white focus:outline-none focus:ring-2 focus:ring-[#c8a052] font-sans" />
+                </div>
+                <button
+                  onClick={() => setSent(true)}
+                  className="w-full mt-4 bg-[#c8a052] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#b0893f] transition cursor-pointer font-sans"
+                >
+                  Nachricht senden
+                </button>
+              </div>
+            )}
           </div>
-
         </div>
       )}
     </section>
   );
 }
-
-export default ContactSection;
