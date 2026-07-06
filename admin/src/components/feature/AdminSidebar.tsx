@@ -18,6 +18,7 @@ export function AdminSidebar() {
   const navItems: NavItem[] = [
     { icon: 'ri-dashboard-line', labelKey: 'sidebar.dashboard', path: '/admin/dashboard' },
     { icon: 'ri-building-line', labelKey: 'sidebar.properties', path: '/admin/properties' },
+    { icon: 'ri-mail-line', labelKey: 'sidebar.inquiries', path: '/admin/inquiries' },
     {
       icon: 'ri-file-text-line',
       labelKey: 'sidebar.pages',

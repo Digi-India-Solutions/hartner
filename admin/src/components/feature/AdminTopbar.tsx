@@ -55,12 +55,14 @@ export function AdminTopbar() {
       <h2 className="text-base font-bold text-gray-900">{currentTitle}</h2>
 
       <div className="flex items-center gap-2">
+        {/*
         <button className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer" title={t('topbar.search')}>
           <i className="ri-search-line"></i>
         </button>
         <button className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer" title={t('topbar.notifications')}>
           <i className="ri-notification-3-line"></i>
         </button>
+        */}
 
         {/* Language Switcher */}
         <div className="flex items-center bg-gray-100 rounded-full p-0.5 mx-1">

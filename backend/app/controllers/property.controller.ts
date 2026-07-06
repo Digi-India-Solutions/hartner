@@ -17,7 +17,10 @@ const checkIsAdmin = (req: Request): boolean => {
       const token = authHeader.substring(7);
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
       return decoded && decoded.role === "ADMIN";
-    } catch (err) {
+    } catch (err: any) {
+      if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
+        throw createHttpError(401, "Sitzung abgelaufen. Bitte melden Sie sich erneut an.");
+      }
       return false;
     }
   }
@@ -27,14 +30,14 @@ const checkIsAdmin = (req: Request): boolean => {
 // GET /api/properties
 export const getAllProperties = asyncHandler(async (req: Request, res: Response) => {
   const isAdmin = checkIsAdmin(req);
-  const { status, search } = req.query;
+  const { status, search, page, limit } = req.query;
 
   const query: any = {};
 
   // If not admin, restrict only to published properties
   if (!isAdmin) {
     query.status = "published";
-  } else if (status && status !== "All") {
+  } else if (status && status !== "All" && status !== "Alle") {
     query.status = (status as string).toLowerCase();
   }
 
@@ -42,12 +45,37 @@ export const getAllProperties = asyncHandler(async (req: Request, res: Response)
     query.title = { $regex: search as string, $options: "i" };
   }
 
-  const properties = await PropertySchema.find(query).sort({ sort_order: 1 });
+  if (page) {
+    const pageNum = parseInt(page as string) || 1;
+    const limitNum = parseInt(limit as string) || 10;
+    const skipNum = (pageNum - 1) * limitNum;
 
-  res.status(200).json({
-    success: true,
-    data: properties,
-  });
+    const totalItems = await PropertySchema.countDocuments(query);
+    const properties = await PropertySchema.find(query)
+      .sort({ sort_order: 1 })
+      .skip(skipNum)
+      .limit(limitNum);
+
+    const totalPages = Math.ceil(totalItems / limitNum);
+
+    res.status(200).json({
+      success: true,
+      data: properties,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        totalItems,
+        totalPages,
+      },
+    });
+  } else {
+    const properties = await PropertySchema.find(query).sort({ sort_order: 1 });
+
+    res.status(200).json({
+      success: true,
+      data: properties,
+    });
+  }
 });
 
 // GET /api/properties/:id

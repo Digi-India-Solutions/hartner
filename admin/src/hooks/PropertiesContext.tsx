@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
 import type { Property, PropertyStatus, PropertyCategory } from '@/mocks/properties';
 
 const mapCategoryToBackend = (cat: PropertyCategory): string => {
@@ -144,12 +144,32 @@ const handleResponse = async (response: Response) => {
     window.location.href = '/admin/login';
     throw new Error('Sitzung abgelaufen. Bitte melden Sie sich erneut an.');
   }
+  if (!response.ok) {
+    let errorMessage = `HTTP-Fehler! Status: ${response.status}`;
+    try {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } else {
+        const textData = await response.text();
+        errorMessage = textData || errorMessage;
+      }
+    } catch (e) {
+      // Ignore parsing error and use default message
+    }
+    throw new Error(errorMessage);
+  }
   return response;
 };
 
 interface PropertiesContextType {
   properties: Property[];
   loading: boolean;
+  loadingMore: boolean;
+  hasMore: boolean;
+  loadMore: () => Promise<void>;
+  resetAndFetch: (filterVal: string, searchVal: string) => Promise<void>;
   reorderProperties: (fromIndex: number, toIndex: number) => Promise<void>;
   updatePropertyStatus: (id: string, status: PropertyStatus) => Promise<void>;
   updateProperty: (id: string, data: Partial<Property>) => Promise<Property>;
@@ -165,27 +185,91 @@ const PropertiesContext = createContext<PropertiesContextType | null>(null);
 export function PropertiesProvider({ children }: { children: ReactNode }) {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentFilter, setCurrentFilter] = useState('Alle');
+  const [currentSearch, setCurrentSearch] = useState('');
 
-  const fetchProperties = useCallback(async () => {
+  const isFetchingRef = useRef(false);
+
+  const fetchProperties = useCallback(async (pageNum: number, filterVal: string, searchVal: string, append = false) => {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
     try {
+      if (pageNum === 1) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-      const response = await handleResponse(await fetch(`${apiUrl}/api/properties`, {
+      const params = new URLSearchParams();
+      params.append('page', String(pageNum));
+      params.append('limit', '15');
+
+      if (filterVal && filterVal !== 'Alle') {
+        params.append('status', mapStatusToBackend(filterVal as PropertyStatus));
+      }
+      if (searchVal) {
+        params.append('search', searchVal);
+      }
+
+      const response = await handleResponse(await fetch(`${apiUrl}/api/properties?${params.toString()}`, {
         headers: getAuthHeaders(),
       }));
       const data = await response.json();
       if (response.ok && data.success) {
-        setProperties((data.data || []).map(mapToFrontendProperty));
+        const newProps = (data.data || []).map(mapToFrontendProperty);
+        if (append) {
+          setProperties((prev) => {
+            const existingIds = new Set(prev.map(p => p.id));
+            const filteredNew = newProps.filter((p: any) => !existingIds.has(p.id));
+            return [...prev, ...filteredNew];
+          });
+        } else {
+          setProperties(newProps);
+        }
+
+        if (data.pagination) {
+          setHasMore(pageNum < data.pagination.totalPages);
+        } else {
+          setHasMore(newProps.length >= 15);
+        }
       }
     } catch (error) {
       console.error('Error fetching properties:', error);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+      isFetchingRef.current = false;
     }
   }, []);
 
   useEffect(() => {
-    fetchProperties();
+    fetchProperties(1, 'Alle', '', false);
   }, [fetchProperties]);
+
+  const loadMore = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    await fetchProperties(nextPage, currentFilter, currentSearch, true);
+  }, [page, loadingMore, hasMore, currentFilter, currentSearch, fetchProperties]);
+
+  const resetAndFetch = useCallback(async (filterVal: string, searchVal: string) => {
+    setPage(1);
+    setHasMore(true);
+    setCurrentFilter(filterVal);
+    setCurrentSearch(searchVal);
+    await fetchProperties(1, filterVal, searchVal, false);
+  }, [fetchProperties]);
+
+  const refresh = useCallback(() => {
+    setPage(1);
+    setHasMore(true);
+    fetchProperties(1, currentFilter, currentSearch, false);
+  }, [currentFilter, currentSearch, fetchProperties]);
 
   const reorderProperties = useCallback(async (fromIndex: number, toIndex: number) => {
     let updatedList: Property[] = [];
@@ -207,13 +291,14 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
       }));
       const data = await response.json();
       if (!response.ok || !data.success) {
-        fetchProperties();
+        refresh();
         throw new Error(data.message || 'Failed to update order on server');
       }
     } catch (error) {
       console.error('Error reordering properties:', error);
+      refresh();
     }
-  }, [fetchProperties]);
+  }, [refresh]);
 
   const updatePropertyStatus = useCallback(async (id: string, status: PropertyStatus) => {
     try {
@@ -322,7 +407,7 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
 
       const data = await response.json();
       if (response.ok && data.success) {
-        fetchProperties();
+        refresh();
         return data.data;
       } else {
         throw new Error(data.message || 'Failed to upload images');
@@ -331,7 +416,7 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
       console.error('Error uploading images:', error);
       throw error;
     }
-  }, [fetchProperties]);
+  }, [refresh]);
 
   const deletePropertyImage = useCallback(async (id: string, imageUrl: string) => {
     try {
@@ -357,7 +442,7 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
       }));
       const data = await response.json();
       if (response.ok && data.success) {
-        fetchProperties();
+        refresh();
       } else {
         throw new Error(data.message || 'Failed to delete image');
       }
@@ -365,13 +450,17 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
       console.error('Error deleting image:', error);
       throw error;
     }
-  }, [properties, fetchProperties]);
+  }, [properties, refresh]);
 
   return (
     <PropertiesContext.Provider
       value={{
         properties,
         loading,
+        loadingMore,
+        hasMore,
+        loadMore,
+        resetAndFetch,
         reorderProperties,
         updatePropertyStatus,
         updateProperty,

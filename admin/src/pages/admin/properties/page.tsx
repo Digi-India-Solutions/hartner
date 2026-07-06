@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -152,9 +152,64 @@ function DraggableRow({ property, index }: { property: Property; index: number }
 
 export default function PropertiesListPage() {
   const { t } = useTranslation();
-  const { properties, loading, reorderProperties } = useProperties();
+  const {
+    properties,
+    loading,
+    loadingMore,
+    hasMore,
+    loadMore,
+    resetAndFetch,
+    reorderProperties,
+  } = useProperties();
   const [activeFilter, setActiveFilter] = useState<PropertyStatus | 'Alle'>('Alle');
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
+
+  const isFirstMount = useRef(true);
+  const sentinelRef = useRef<HTMLTableRowElement | null>(null);
+
+  // Debounce search query changes by 300ms
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  // Fetch properties from server when search or filter changes
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+    resetAndFetch(activeFilter, debouncedSearch);
+  }, [activeFilter, debouncedSearch, resetAndFetch]);
+
+  // Infinite scroll using IntersectionObserver on sentinel element
+  useEffect(() => {
+    if (loading || loadingMore || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentSentinel = sentinelRef.current;
+    if (currentSentinel) {
+      observer.observe(currentSentinel);
+    }
+
+    return () => {
+      if (currentSentinel) {
+        observer.unobserve(currentSentinel);
+      }
+    };
+  }, [loading, loadingMore, hasMore, loadMore]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -162,16 +217,8 @@ export default function PropertiesListPage() {
     })
   );
 
-  const filtered = useMemo(() => {
-    return properties.filter((p) => {
-      const matchesFilter = activeFilter === 'Alle' || p.status === activeFilter;
-      const matchesSearch =
-        !searchQuery ||
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.address.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesFilter && matchesSearch;
-    });
-  }, [properties, activeFilter, searchQuery]);
+  // Data is filtered on server, so filtered list is just the properties list
+  const filtered = properties;
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -264,12 +311,30 @@ export default function PropertiesListPage() {
                     />
                   ))}
                 </SortableContext>
+
+                {/* Sentinel row for infinite scroll observer */}
+                {hasMore && (
+                  <tr ref={sentinelRef}>
+                    <td colSpan={7} className="h-4"></td>
+                  </tr>
+                )}
+
+                {/* Spinner inside the table when loading more */}
+                {loadingMore && (
+                  <tr>
+                    <td colSpan={7} className="py-6 text-center">
+                      <div className="flex items-center justify-center bg-gray-50/10">
+                        <i className="ri-loader-4-line animate-spin text-2xl text-accent-500"></i>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         </DndContext>
 
-        {filtered.length === 0 && (
+        {filtered.length === 0 && !loading && !loadingMore && (
           <div className="py-16 text-center text-sm text-gray-400">
             {t('props.noResults')}
           </div>

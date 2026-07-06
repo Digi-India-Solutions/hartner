@@ -16,6 +16,7 @@ export default {
   'sidebar.company': 'Haertner Immobilien',
   'sidebar.dashboard': 'Dashboard',
   'sidebar.properties': 'Properties',
+  'sidebar.inquiries': 'Inquiries',
   'sidebar.pages': 'Pages',
   'sidebar.impressum': 'Imprint',
   'sidebar.datenschutz': 'Privacy Policy',

@@ -37,6 +37,43 @@ export default function PropertyDetailPage({ params }) {
   const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const handleSubmitInquiry = async () => {
+    if (!form.name || !form.email || !form.phone) {
+      setSubmitError("Bitte füllen Sie alle Pflichtfelder aus (Name, E-Mail, Telefonnummer).");
+      return;
+    }
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const subject = form.subject || `Anfrage zu ${property.title}`;
+      const res = await fetch("http://localhost:8000/api/inquiries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          subject,
+          message: form.message,
+          propertyId: property.id
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Fehler beim Senden der Anfrage.");
+      }
+      setSent(true);
+    } catch (err) {
+      setSubmitError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchProperty() {
@@ -376,7 +413,12 @@ export default function PropertyDetailPage({ params }) {
                 Fordern Sie jetzt das unverbindliche Exposé an oder vereinbaren Sie einen persönlichen Besichtigungstermin.
               </p>
               <button
-                onClick={() => setOpenModal(true)}
+                onClick={() => {
+                  setOpenModal(true);
+                  setForm({ name: "", email: "", phone: "", subject: `Anfrage zu ${property.title}`, message: "" });
+                  setSent(false);
+                  setSubmitError("");
+                }}
                 className="btn btn-gold w-100 py-3 fw-bold text-white border-0 rounded-xl shadow-xs flex items-center justify-center gap-2 cursor-pointer font-sans"
               >
                 <BsEnvelopeOpenFill size={16} />
@@ -408,6 +450,9 @@ export default function PropertyDetailPage({ params }) {
               </div>
             ) : (
               <div className="contact-form-box space-y-4">
+                {submitError && (
+                  <p className="text-red-500 text-sm font-medium">{submitError}</p>
+                )}
                 <div>
                   <label>Ihr Name *</label>
                   <input type="text" placeholder="z. B. Max Mustermann" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
@@ -429,10 +474,11 @@ export default function PropertyDetailPage({ params }) {
                   <textarea rows="4" placeholder="Schreiben Sie uns Ihre Nachricht..." value={form.message} onChange={e => setForm({...form, message: e.target.value})} />
                 </div>
                 <button
-                  onClick={() => setSent(true)}
-                  className="contact-form-submit"
+                  onClick={handleSubmitInquiry}
+                  disabled={submitting}
+                  className="contact-form-submit disabled:opacity-50 cursor-pointer"
                 >
-                  Nachricht senden
+                  {submitting ? "Wird gesendet..." : "Nachricht senden"}
                 </button>
               </div>
             )}

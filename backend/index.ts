@@ -35,6 +35,9 @@ const port = Number(process.env.PORT) ?? 5000;
 
 const app: Express = express();
 
+// Trust proxy for rate limiting behind reverse proxies (like Nginx, Cloudflare, etc.)
+app.set("trust proxy", true);
+
 // Security middlewares
 app.use(helmet({ 
   contentSecurityPolicy: false,

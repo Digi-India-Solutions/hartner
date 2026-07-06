@@ -29,9 +29,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ email, password }),
       });
 
+      if (!response.ok) {
+        let errorMessage = 'E-Mail oder Passwort ist falsch';
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } else {
+            const textData = await response.text();
+            errorMessage = textData || errorMessage;
+          }
+        } catch (e) {
+          // Ignore parsing error
+        }
+        return { success: false, error: errorMessage };
+      }
+
       const data = await response.json();
 
-      if (response.ok && data.success) {
+      if (data.success) {
         sessionStorage.setItem('haertner_auth', 'true');
         sessionStorage.setItem('haertner_token', data.token);
         if (data.refreshToken) {
@@ -47,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error: any) {
       console.error('Login error:', error);
-      return { success: false, error: 'Verbindung zum Server failed' };
+      return { success: false, error: error.message || 'Verbindung zum Server failed' };
     }
   }, []);
 

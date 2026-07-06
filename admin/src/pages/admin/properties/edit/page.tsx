@@ -7,6 +7,7 @@ import { useProperties } from '@/hooks/PropertiesContext';
 import type { Property, PropertyDetailFields, PropertyStatus, PropertyCategory } from '@/mocks/properties';
 import { DetailFieldsGrid } from './components/DetailFieldsGrid';
 import { CardPreviewFields } from './components/CardPreviewFields';
+import { PropertyCardPreview } from './components/PropertyCardPreview';
 import { StatusPanel } from './components/StatusPanel';
 import { ImageManager } from './components/ImageManager';
 
@@ -216,7 +217,6 @@ export default function PropertyEditorPage() {
             </div>
           </div>
 
-          {/* Section 2: Immobiliendetails */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-sm font-semibold text-gray-900 mb-4">{t('editor.sectionDetails')}</h2>
             <DetailFieldsGrid
@@ -260,6 +260,13 @@ export default function PropertyEditorPage() {
             onImagesChange={(imgs) => { setImages(imgs); markDirty(); }}
             onFilesAdded={handleFilesAdded}
             onImageRemoved={handleImageRemoved}
+          />
+          <PropertyCardPreview
+            detailFields={detailFields}
+            selectedFields={cardFields}
+            title={title}
+            address={address}
+            images={images}
           />
         </div>
       </div>

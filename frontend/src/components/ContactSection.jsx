@@ -7,6 +7,41 @@ export default function ContactSection() {
   const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const handleSubmitInquiry = async () => {
+    if (!form.name || !form.email || !form.phone || !form.subject) {
+      setSubmitError("Bitte füllen Sie alle Pflichtfelder aus (Name, E-Mail, Telefonnummer, Betreff).");
+      return;
+    }
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const res = await fetch("http://localhost:8000/api/inquiries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          subject: form.subject,
+          message: form.message,
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Fehler beim Senden der Anfrage.");
+      }
+      setSent(true);
+    } catch (err) {
+      setSubmitError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section
@@ -38,7 +73,12 @@ export default function ContactSection() {
               Ob Verkauf, Kauf, Vermietung oder Investment – wir sind für Sie da. Diskret, persönlich und mit vollem Einsatz.
             </p>
             <button
-              onClick={() => setOpenModal(true)}
+              onClick={() => {
+                setOpenModal(true);
+                setForm({ name: "", email: "", phone: "", subject: "Allgemeine Anfrage", message: "" });
+                setSent(false);
+                setSubmitError("");
+              }}
               className="bg-[#c8a052] hover:bg-[#b0893f] text-white px-8 py-4 text-base font-semibold rounded-lg shadow-md transition-all duration-300 cursor-pointer"
             >
               JETZT KONTAKT AUFNEHMEN
@@ -119,6 +159,9 @@ export default function ContactSection() {
               </div>
             ) : (
               <div className="space-y-4">
+                {submitError && (
+                  <p className="text-red-500 text-sm font-medium">{submitError}</p>
+                )}
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 font-sans">Ihr Name *</label>
                   <input type="text" placeholder="z. B. Max Mustermann" value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="w-full border border-gray-200 p-4 rounded-xl text-black bg-white focus:outline-none focus:ring-2 focus:ring-[#c8a052] font-sans" />
@@ -140,10 +183,11 @@ export default function ContactSection() {
                   <textarea rows="4" placeholder="Schreiben Sie uns Ihre Nachricht..." value={form.message} onChange={e => setForm({...form, message: e.target.value})} className="w-full border border-gray-200 p-4 rounded-xl text-black bg-white focus:outline-none focus:ring-2 focus:ring-[#c8a052] font-sans" />
                 </div>
                 <button
-                  onClick={() => setSent(true)}
-                  className="w-full mt-4 bg-[#c8a052] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#b0893f] transition cursor-pointer font-sans"
+                  onClick={handleSubmitInquiry}
+                  disabled={submitting}
+                  className="w-full mt-4 bg-[#c8a052] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#b0893f] transition cursor-pointer font-sans disabled:opacity-50"
                 >
-                  Nachricht senden
+                  {submitting ? "Wird gesendet..." : "Nachricht senden"}
                 </button>
               </div>
             )}

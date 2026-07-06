@@ -9,6 +9,7 @@ import PropertyEditorPage from "../pages/admin/properties/edit/page";
 import DashboardPage from "../pages/admin/dashboard/page";
 import SettingsPage from "../pages/admin/settings/page";
 import LegalPagesPage from "../pages/admin/pages/page";
+import InquiriesListPage from "../pages/admin/inquiries/page";
 import { PropertiesProvider } from "../hooks/PropertiesContext";
 
 const routes: RouteObject[] = [
@@ -39,6 +40,10 @@ const routes: RouteObject[] = [
       {
         path: "properties",
         element: <PropertiesListPage />,
+      },
+      {
+        path: "inquiries",
+        element: <InquiriesListPage />,
       },
       {
         path: "properties/new",

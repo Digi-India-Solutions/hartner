@@ -3,6 +3,7 @@ import userRoutes from "./user.route";
 import propertyRoutes from "./property.route";
 import authRoutes from "./auth.route";
 import pageRoutes from "./page.route";
+import inquiryRoutes from "./inquiry.route";
 
 // routes
 const router = express.Router();
@@ -11,5 +12,6 @@ router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/pages", pageRoutes);
 router.use("/", propertyRoutes);
+router.use("/", inquiryRoutes);
 
 export default router;
