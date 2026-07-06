@@ -1,22 +1,23 @@
 "use client";
 
+
 import { use, useEffect, useState } from "react";
 import {
-  BsGeoAltFill,
-  BsHouseDoor,
-  BsLayerForward,
   BsBoundingBox,
-  BsMap,
-  BsCalendar3,
-  BsFire,
   BsBuilding,
-  BsTree,
-  BsFileEarmarkCheck,
-  BsInfoCircle,
-  BsShieldExclamation,
-  BsHammer,
+  BsCalendar3,
   BsCarFront,
-  BsEnvelopeOpenFill
+  BsEnvelopeOpenFill,
+  BsFileEarmarkCheck,
+  BsFire,
+  BsGeoAltFill,
+  BsHammer,
+  BsHouseDoor,
+  BsInfoCircle,
+  BsLayerForward,
+  BsMap,
+  BsShieldExclamation,
+  BsTree
 } from "react-icons/bs";
 
 const categoryLabels = {
@@ -449,7 +450,7 @@ export default function PropertyDetailPage({ params }) {
                 <p className="text-gray-500 mt-2">Wir haben Ihre Nachricht erhalten und melden uns in Kürze bei Ihnen.</p>
               </div>
             ) : (
-              <div className="contact-form-box space-y-4">
+              <div className="contact-form-box space-y-4 text-black">
                 {submitError && (
                   <p className="text-red-500 text-sm font-medium">{submitError}</p>
                 )}
