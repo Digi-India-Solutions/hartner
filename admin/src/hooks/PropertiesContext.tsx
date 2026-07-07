@@ -171,6 +171,12 @@ interface PropertiesContextType {
   loadMore: () => Promise<void>;
   currentPage: number;
   totalPages: number;
+  counts: {
+  all: number;
+  published: number;
+  offline: number;
+  draft: number;
+};
   goToNextPage: () => Promise<void>;
   goToPreviousPage: () => Promise<void>;
   resetAndFetch: (filterVal: string, searchVal: string) => Promise<void>;
@@ -192,6 +198,12 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [counts, setCounts] = useState({
+    all: 0,
+    published: 0,
+    offline: 0,
+    draft: 0,
+  });
   const [hasMore, setHasMore] = useState(true);
   const [currentFilter, setCurrentFilter] = useState('Alle');
   const [currentSearch, setCurrentSearch] = useState('');
@@ -224,6 +236,7 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
         headers: getAuthHeaders(),
       }));
       const data = await response.json();
+      console.log("API Response:", data);
       if (response.ok && data.success) {
         const newProps = (data.data || []).map(mapToFrontendProperty);
         if (append) {
@@ -243,6 +256,10 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
           setTotalPages(1);
           setHasMore(newProps.length >= 12);
         }
+
+        if (data.counts) {
+        setCounts(data.counts);
+      }
       }
     } catch (error) {
       console.error('Error fetching properties:', error);
@@ -485,6 +502,7 @@ const goToPreviousPage = useCallback(async () => {
         loadMore,
         currentPage: page,
         totalPages,
+        counts,
         goToNextPage,
         goToPreviousPage,
         resetAndFetch,

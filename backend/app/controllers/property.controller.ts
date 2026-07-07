@@ -1,13 +1,13 @@
+import { type IProperty, type IPropertyImage } from "@dtos/property.dto";
+import PropertySchema from "@models/property.model";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import mongoose from "mongoose";
-import PropertySchema from "@models/property.model";
-import { type IProperty, type IPropertyImage } from "@dtos/property.dto";
-import jwt from "jsonwebtoken";
-import process from "process";
 import fs from "fs";
-import path from "path";
 import createHttpError from "http-errors";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import path from "path";
+import process from "process";
 
 // Helper: Check if requester is Admin
 const checkIsAdmin = (req: Request): boolean => {
@@ -51,12 +51,23 @@ export const getAllProperties = asyncHandler(async (req: Request, res: Response)
     const skipNum = (pageNum - 1) * limitNum;
 
     const totalItems = await PropertySchema.countDocuments(query);
+    const allCount = await PropertySchema.countDocuments({});
+    const publishedCount = await PropertySchema.countDocuments({ status: "published" });
+    const offlineCount = await PropertySchema.countDocuments({ status: "offline" });
+    const draftCount = await PropertySchema.countDocuments({ status: "draft" });
     const properties = await PropertySchema.find(query)
       .sort({ sort_order: 1 })
       .skip(skipNum)
       .limit(limitNum);
 
     const totalPages = Math.ceil(totalItems / limitNum);
+
+    console.log({
+  allCount,
+  publishedCount,
+  offlineCount,
+  draftCount,
+});
 
     res.status(200).json({
       success: true,
@@ -67,6 +78,12 @@ export const getAllProperties = asyncHandler(async (req: Request, res: Response)
         totalItems,
         totalPages,
       },
+      counts: {
+        all: allCount,
+        published: publishedCount,
+        offline: offlineCount,
+        draft: draftCount,
+  },
     });
   } else {
     const properties = await PropertySchema.find(query).sort({ sort_order: 1 });

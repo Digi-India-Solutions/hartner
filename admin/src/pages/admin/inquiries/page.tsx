@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -26,6 +26,8 @@ export default function InquiriesListPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const ITEMS_PER_PAGE = 12;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchInquiries = async () => {
     try {
@@ -107,6 +109,23 @@ export default function InquiriesListPage() {
     );
   }, [inquiries, searchQuery]);
 
+  const totalPages = Math.ceil(filteredInquiries.length / ITEMS_PER_PAGE);
+
+const paginatedInquiries = filteredInquiries.slice(
+  (currentPage - 1) * ITEMS_PER_PAGE,
+  currentPage * ITEMS_PER_PAGE
+);
+
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchQuery]);
+
+useEffect(() => {
+  if (currentPage > totalPages && totalPages > 0) {
+    setCurrentPage(totalPages);
+  }
+}, [currentPage, totalPages]);
+
   const formatDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);
@@ -174,6 +193,7 @@ export default function InquiriesListPage() {
             Keine Kontaktanfragen gefunden.
           </div>
         ) : (
+          <>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -187,7 +207,7 @@ export default function InquiriesListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filteredInquiries.map((inq) => (
+                {paginatedInquiries.map((inq) => (
                   <tr
                     key={inq.id}
                     onClick={() => setSelectedInquiry(inq)}
@@ -233,7 +253,34 @@ export default function InquiriesListPage() {
                 ))}
               </tbody>
             </table>
+                    </div>
+
+          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+            >
+              Previous
+            </button>
+
+            <span className="text-sm font-medium text-gray-700">
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+            >
+              Next
+            </button>
           </div>
+
+          </>
+
         )}
       </div>
 
