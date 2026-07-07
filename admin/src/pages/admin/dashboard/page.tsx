@@ -1,17 +1,17 @@
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useProperties } from '@/hooks/PropertiesContext';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 export default function DashboardPage() {
   const { t } = useTranslation();
-  const { properties } = useProperties();
+  const { properties, counts } = useProperties();
 
-  const published = properties.filter((p) => p.status === 'Veröffentlicht').length;
-  const offline = properties.filter((p) => p.status === 'Offline').length;
-  const drafts = properties.filter((p) => p.status === 'Entwurf').length;
+const published = counts.published;
+const offline = counts.offline;
+const drafts = counts.draft;
 
   const stats = [
-    { label: t('dash.totalProperties'), value: properties.length, icon: 'ri-building-line', color: 'bg-accent-500' },
+    { label: t('dash.totalProperties'), value: counts.all, icon: 'ri-building-line', color: 'bg-accent-500' },
     { label: t('dash.published'), value: published, icon: 'ri-eye-line', color: 'bg-green-500' },
     { label: t('dash.offline'), value: offline, icon: 'ri-eye-off-line', color: 'bg-red-500' },
     { label: t('dash.drafts'), value: drafts, icon: 'ri-draft-line', color: 'bg-amber-500' },
