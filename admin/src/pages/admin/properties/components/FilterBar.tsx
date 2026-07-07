@@ -1,7 +1,6 @@
-import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import type { PropertyStatus } from '@/mocks/properties';
 import { useProperties } from '@/hooks/PropertiesContext';
+import type { PropertyStatus } from '@/mocks/properties';
+import { useTranslation } from 'react-i18next';
 
 interface FilterBarProps {
   activeFilter: PropertyStatus | 'Alle';
@@ -17,7 +16,7 @@ export function FilterBar({
   onSearchChange,
 }: FilterBarProps) {
   const { t } = useTranslation();
-  const { properties } = useProperties();
+  const { counts } = useProperties();
 
   const filters: { key: PropertyStatus | 'Alle'; labelKey: string }[] = [
     { key: 'Alle', labelKey: 'props.filter.all' },
@@ -26,14 +25,14 @@ export function FilterBar({
     { key: 'Entwurf', labelKey: 'props.filter.draft' },
   ];
 
-  const counts = useMemo(() => {
-    return {
-      Alle: properties.length,
-      Veröffentlicht: properties.filter((p) => p.status === 'Veröffentlicht').length,
-      Offline: properties.filter((p) => p.status === 'Offline').length,
-      Entwurf: properties.filter((p) => p.status === 'Entwurf').length,
-    };
-  }, [properties]);
+  // const counts = useMemo(() => {
+  //   return {
+  //     Alle: properties.length,
+  //     Veröffentlicht: properties.filter((p) => p.status === 'Veröffentlicht').length,
+  //     Offline: properties.filter((p) => p.status === 'Offline').length,
+  //     Entwurf: properties.filter((p) => p.status === 'Entwurf').length,
+  //   };
+  // }, [properties]);
 
   return (
     <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -49,7 +48,17 @@ export function FilterBar({
             }`}
           >
             {t(f.labelKey)}
-            <span className="ml-1.5 text-xs text-gray-400">({counts[f.key]})</span>
+            <span className="ml-1.5 text-xs text-gray-400">
+  (
+  {f.key === 'Alle'
+    ? counts.all
+    : f.key === 'Veröffentlicht'
+    ? counts.published
+    : f.key === 'Offline'
+    ? counts.offline
+    : counts.draft}
+  )
+</span>
           </button>
         ))}
       </div>
