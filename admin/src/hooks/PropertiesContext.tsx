@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
-import type { Property, PropertyStatus, PropertyCategory } from '@/mocks/properties';
+import type { Property, PropertyCategory, PropertyStatus } from '@/mocks/properties';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 const mapCategoryToBackend = (cat: PropertyCategory): string => {
   switch (cat) {
@@ -169,6 +169,10 @@ interface PropertiesContextType {
   loadingMore: boolean;
   hasMore: boolean;
   loadMore: () => Promise<void>;
+  currentPage: number;
+  totalPages: number;
+  goToNextPage: () => Promise<void>;
+  goToPreviousPage: () => Promise<void>;
   resetAndFetch: (filterVal: string, searchVal: string) => Promise<void>;
   reorderProperties: (fromIndex: number, toIndex: number) => Promise<void>;
   updatePropertyStatus: (id: string, status: PropertyStatus) => Promise<void>;
@@ -187,6 +191,7 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [currentFilter, setCurrentFilter] = useState('Alle');
   const [currentSearch, setCurrentSearch] = useState('');
@@ -206,7 +211,7 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const params = new URLSearchParams();
       params.append('page', String(pageNum));
-      params.append('limit', '15');
+      params.append('limit', '12');
 
       if (filterVal && filterVal !== 'Alle') {
         params.append('status', mapStatusToBackend(filterVal as PropertyStatus));
@@ -232,9 +237,11 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
         }
 
         if (data.pagination) {
+          setTotalPages(data.pagination?.totalPages || 1);
           setHasMore(pageNum < data.pagination.totalPages);
         } else {
-          setHasMore(newProps.length >= 15);
+          setTotalPages(1);
+          setHasMore(newProps.length >= 12);
         }
       }
     } catch (error) {
@@ -256,6 +263,22 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
     setPage(nextPage);
     await fetchProperties(nextPage, currentFilter, currentSearch, true);
   }, [page, loadingMore, hasMore, currentFilter, currentSearch, fetchProperties]);
+
+  const goToNextPage = useCallback(async () => {
+  if (page >= totalPages) return;
+
+  const nextPage = page + 1;
+  setPage(nextPage);
+  await fetchProperties(nextPage, currentFilter, currentSearch, false);
+}, [page, totalPages, currentFilter, currentSearch, fetchProperties]);
+
+const goToPreviousPage = useCallback(async () => {
+  if (page <= 1) return;
+
+  const prevPage = page - 1;
+  setPage(prevPage);
+  await fetchProperties(prevPage, currentFilter, currentSearch, false);
+}, [page, currentFilter, currentSearch, fetchProperties]);
 
   const resetAndFetch = useCallback(async (filterVal: string, searchVal: string) => {
     setPage(1);
@@ -460,6 +483,10 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
         loadingMore,
         hasMore,
         loadMore,
+        currentPage: page,
+        totalPages,
+        goToNextPage,
+        goToPreviousPage,
         resetAndFetch,
         reorderProperties,
         updatePropertyStatus,
