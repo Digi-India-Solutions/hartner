@@ -36,7 +36,7 @@ export default function Hero() {
       ))}
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60" />
+      {/* <div className="absolute inset-0 bg-black/60" /> */}
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 xl:px-20 pt-32 pb-16">

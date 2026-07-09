@@ -17,6 +17,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
+import "swiper/css/thumbs";
 
 export default function Wohnimmobilien() {
     const images = [
@@ -27,10 +28,11 @@ export default function Wohnimmobilien() {
     "/images/card5.jpg",
     ];
 
-const [activeImage, setActiveImage] = useState(0);
+// const [activeImage, setActiveImage] = useState(0);
 const [openModal, setOpenModal] = useState(false);
 const [isMounted, setIsMounted] = useState(false);
 const swiperRef = useRef(null);
+const [thumbsSwiper, setThumbsSwiper] = useState(null);
 const containerRef = useRef(null);
 
     useEffect(() => {
@@ -129,9 +131,10 @@ return (
               {isMounted ? (
                 <Swiper
                   navigation
-                  modules={[Navigation]}
+                  modules={[Navigation, Thumbs]}
+                  thumbs={{ swiper: thumbsSwiper }}
                   className="propertySwiper h-full w-full"
-                  initialSlide={activeImage}
+                  // initialSlide={activeImage}
                   observer={true}
                   observeParents={true}
                   observeSlideChildren={true}
@@ -145,7 +148,7 @@ return (
                       swiper.updateSlidesClasses();
                     });
                   }}
-                  onSlideChange={(swiper) => setActiveImage(swiper.activeIndex)}
+                  // onSlideChange={(swiper) => setActiveImage(swiper.activeIndex)}
                 >
                   {images.map((img, index) => (
                     <SwiperSlide key={index} className="w-full h-full relative">
@@ -163,26 +166,24 @@ return (
             </div>
 
             {/* THUMBNAILS */}
-            <div className="grid grid-cols-5 gap-5 mt-8">
-              {images.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`Vorschau ${index + 1}`}
-                  onClick={() => {
-                    if (swiperRef.current) {
-                      swiperRef.current.slideTo(index);
-                    }
-                    setActiveImage(index);
-                  }}
-                  className={`h-[130px] w-full object-cover cursor-pointer rounded-md border-4 transition ${
-                    activeImage === index
-                      ? "border-[#c8a052]"
-                      : "border-transparent"
-                  }`}
-                />
-              ))}
-            </div>
+<Swiper
+  onSwiper={setThumbsSwiper}
+  spaceBetween={20}
+  slidesPerView={5}
+  watchSlidesProgress
+  modules={[Thumbs]}
+  className="mt-8"
+>
+  {images.map((img, index) => (
+    <SwiperSlide key={index}>
+      <img
+        src={img}
+        alt={`Vorschau ${index + 1}`}
+        className="h-[130px] w-full object-cover cursor-pointer rounded-md"
+      />
+    </SwiperSlide>
+  ))}
+</Swiper>
 
             {/* OBJEKTBESCHREIBUNG */}
             <div className="mt-10 bg-white border rounded-[30px] p-10">

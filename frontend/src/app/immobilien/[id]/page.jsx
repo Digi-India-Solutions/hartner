@@ -2,6 +2,12 @@
 
 
 import { use, useEffect, useState } from "react";
+
+import Link from "next/link";
+import Image from "next/image";
+import { Navigation, Thumbs } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+
 import {
   BsBoundingBox,
   BsBuilding,
@@ -19,6 +25,9 @@ import {
   BsShieldExclamation,
   BsTree
 } from "react-icons/bs";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
 
 const categoryLabels = {
   zinshaus: "Zinshaus",
@@ -35,7 +44,11 @@ export default function PropertyDetailPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [mainSwiper, setMainSwiper] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
+const [galleryIndex, setGalleryIndex] = useState(0);
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -107,9 +120,9 @@ export default function PropertyDetailPage({ params }) {
           <p className="text-6xl mb-4">🏚️</p>
           <h2 className="text-3xl font-serif text-black mb-2 font-bold">Immobilie nicht gefunden</h2>
           <p className="text-gray-500">Die gesuchte Immobilie existiert nicht oder wurde entfernt.</p>
-          <a href="/immobilien" className="inline-block mt-6 bg-[#c8a052] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#b0893f] transition">
+          <Link href="/immobilien" className="inline-block mt-6 bg-[#c8a052] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#b0893f] transition">
             Zurück zur Übersicht
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -129,6 +142,7 @@ export default function PropertyDetailPage({ params }) {
     return `http://localhost:8000${url}`;
   };
 
+  const imageLoader = ({ src }) => src;
 
   const formatValue = (val) => {
     if (val === true || val === "true" || val === "Ja") return "Ja";
@@ -213,38 +227,101 @@ export default function PropertyDetailPage({ params }) {
 
             {/* Media Gallery (Hero image + Thumbnail state switcher) */}
             <div>
-              <div className="property-hero-image w-full h-[300px] sm:h-[400px] md:h-[480px] rounded-3xl overflow-hidden shadow-sm bg-gray-50 border border-gray-100 flex items-center justify-center">
-                {images.length > 0 ? (
-                  <img
-                    id="mainPropertyImage"
-                    src={getImageUrl(images[activeIndex])}
-                    alt={`${property.title} - Bild ${activeIndex + 1}`}
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  <div className="text-6xl text-gray-300">🏠</div>
-                )}
-              </div>
+              <div className="property-hero-image w-full h-[300px] sm:h-[400px] md:h-[480px] rounded-3xl overflow-hidden shadow-sm bg-gray-50 border border-gray-100">
+
+  {images.length > 0 ? (
+    <Swiper
+    onSwiper={(swiper) => {
+  console.log("Main Swiper:", swiper);
+  setMainSwiper(swiper);
+}}
+      navigation
+      modules={[Navigation, Thumbs]}
+      thumbs={{
+  swiper:
+    thumbsSwiper && !thumbsSwiper.destroyed
+      ? thumbsSwiper
+      : null,
+}}
+      onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+      className="w-full h-full"
+    >
+      {images.map((img, index) => (
+        <SwiperSlide key={index}>
+          <div className="relative w-full h-full">
+            <Image
+              loader={imageLoader}
+              src={getImageUrl(img)}
+              alt={`${property.title} - Bild ${index + 1}`}
+              onClick={() => {
+                setGalleryIndex(index);
+                setShowGallery(true);
+              }}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className="object-contain cursor-pointer"
+            />
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  ) : (
+    <div className="w-full h-full flex items-center justify-center text-6xl text-gray-300">
+      🏠
+    </div>
+  )}
+
+</div>
 
               {images.length > 1 && (
-                <div className="property-gallery flex gap-3 flex-wrap mt-4">
-                  {images.map((img, i) => (
-                    <img
-                      key={img.id || i}
-                      src={getImageUrl(img)}
-                      alt=""
-                      onClick={() => setActiveIndex(i)}
-                      className={`gallery-thumb ${activeIndex === i ? "active" : ""}`}
-                    />
-                  ))}
-                </div>
-              )}
+  <Swiper
+  onSwiper={setThumbsSwiper}
+  
+  freeMode={true}
+  modules={[Thumbs, Navigation]}
+  spaceBetween={12}
+  slidesPerView={4}
+  watchSlidesProgress={true}
+  
+  className="mt-4"
+>
+    {images.map((img, i) => (
+      <SwiperSlide
+  key={img.id || i}
+  onClick={() => {
+    mainSwiper?.slideTo(i);
+    setActiveIndex(i);
+  }}
+>
+        <div className="relative w-full h-24">
+          <Image
+            loader={imageLoader}
+            src={getImageUrl(img)}
+            alt={`${property.title} - Bild ${i + 1}`}
+            onClick={() => {
+              mainSwiper?.slideTo(i);
+              setActiveIndex(i);
+            }}
+            fill
+            sizes="100px"
+            className={`object-cover rounded-xl cursor-pointer transition border-4 ${
+              activeIndex === i
+                ? "border-[#c8a052]"
+                : "border-transparent"
+            }`}
+          />
+        </div>
+      </SwiperSlide>
+    ))}
+  </Swiper>
+)}
             </div>
 
             {/* Objektbeschreibung */}
             {property.description && (
               <div className="detail-card bg-white p-6 md:p-8 rounded-3xl border shadow-xs mb-4">
-                <h3 className="detail-title fw-bold mb-3 position-relative pb-2 text-xl font-serif">
+                <h3 className="detail-title fw-bold mb-3 position-relative pb-2 text-xl font-serif text-black">
                   Objektbeschreibung
                 </h3>
                 <div className="description-text text-secondary leading-relaxed text-base md:text-lg whitespace-pre-line mt-4">
@@ -254,7 +331,7 @@ export default function PropertyDetailPage({ params }) {
             )}
 
             {/* KATEGORIE: FLÄCHEN & EINHEITEN */}
-            {hasFlaechen && (
+            {/* {hasFlaechen && (
               <div className="detail-card bg-white p-6 md:p-8 rounded-3xl border shadow-xs mb-4">
                 <h3 className="detail-title fw-bold mb-4 position-relative pb-2 text-xl font-serif">
                   Flächen & Einheiten
@@ -273,10 +350,10 @@ export default function PropertyDetailPage({ params }) {
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* KATEGORIE: OBJEKTDATEN & ZUSTAND */}
-            {hasObjektdaten && (
+            {/* {hasObjektdaten && (
               <div className="detail-card bg-white p-6 md:p-8 rounded-3xl border shadow-xs mb-4">
                 <h3 className="detail-title fw-bold mb-4 position-relative pb-2 text-xl font-serif">
                   Objektdaten & Zustand
@@ -295,7 +372,7 @@ export default function PropertyDetailPage({ params }) {
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
 
           </div>
 
@@ -340,6 +417,129 @@ export default function PropertyDetailPage({ params }) {
                 )}
               </div>
             )}
+
+            {hasFlaechen && (
+  <div className="bg-white rounded-3xl border shadow-xs overflow-hidden">
+    <table className="w-full">
+      <thead>
+        <tr className="border-b">
+          <th className="text-left px-6 py-5 text-black">
+            Eigenschaft
+          </th>
+          <th className="text-right px-6 py-5 text-black">
+            Wert
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {details.wohnflaeche && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Wohnfläche</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.wohnflaeche}
+            </td>
+          </tr>
+        )}
+
+        {details.nutzflaeche && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Nutzfläche</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.nutzflaeche}
+            </td>
+          </tr>
+        )}
+
+        {details.widmung && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Widmung</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.widmung}
+            </td>
+          </tr>
+        )}
+
+        {details.grundflaeche && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Grundfläche</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.grundflaeche}
+            </td>
+          </tr>
+        )}
+
+        {details.unbefristete_vermietung && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Unbefristete Vermietung
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {formatValue(details.unbefristete_vermietung)}
+            </td>
+          </tr>
+        )}
+
+        {details.balkon_terrassen && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Balkon / Terrassen
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.balkon_terrassen}
+            </td>
+          </tr>
+        )}
+
+        {details.eigengareten && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Eigengärten
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.eigengareten}
+            </td>
+          </tr>
+        )}
+
+        {details.ist_ertrag_netto && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Ist-Ertrag (netto)
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.ist_ertrag_netto}
+            </td>
+          </tr>
+        )}
+
+        {details.soll_ertrag_netto && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Soll-Ertrag (netto)
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.soll_ertrag_netto}
+            </td>
+          </tr>
+        )}
+
+        {details.ist_netto_mietzins && (
+          <tr>
+            <td className="px-6 py-5 text-gray-600">
+              Ø Ist-Nettomietzins
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.ist_netto_mietzins}
+            </td>
+          </tr>
+        )}
+
+      </tbody>
+    </table>
+  </div>
+)}
 
             {/* AUSSTATTUNG & BELEGUNG */}
             {hasAusstattung && (
@@ -486,6 +686,37 @@ export default function PropertyDetailPage({ params }) {
           </div>
         </div>
       )}
+      {showGallery && (
+  <div
+    className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
+    onClick={() => setShowGallery(false)}
+  >
+    <button
+      onClick={() => setShowGallery(false)}
+      className="absolute top-5 right-5 text-white text-5xl z-50"
+    >
+      ×
+    </button>
+
+    <Swiper
+      initialSlide={galleryIndex}
+      navigation
+      modules={[Navigation]}
+      className="w-[90%] h-[90%]"
+    >
+      {images.map((img, index) => (
+        <SwiperSlide key={index}>
+          <img
+            src={getImageUrl(img)}
+            alt=""
+            className="w-full h-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  </div>
+)}
     </section>
   );
 }
