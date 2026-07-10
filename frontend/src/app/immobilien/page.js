@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import PropertyCard from "@/components/PropertyCard";
+import { useEffect, useState } from "react";
 
 export default function ImmobilienPage() {
   const [properties, setProperties] = useState([]);
@@ -10,7 +10,7 @@ export default function ImmobilienPage() {
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const res = await fetch("http://localhost:8000/api/properties");
+        const res = await fetch("https://hartapi.digiindiasolutions.com/api/properties");
         if (!res.ok) throw new Error("Fehler beim Laden");
         const json = await res.json();
         const all = json.data || json || [];

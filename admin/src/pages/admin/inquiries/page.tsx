@@ -32,7 +32,7 @@ export default function InquiriesListPage() {
   const fetchInquiries = async () => {
     try {
       setLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const token = sessionStorage.getItem('haertner_token');
       
       const res = await fetch(`${apiUrl}/api/inquiries`, {
@@ -71,7 +71,7 @@ export default function InquiriesListPage() {
     if (!window.confirm('Möchten Sie diese Anfrage wirklich löschen?')) return;
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const token = sessionStorage.getItem('haertner_token');
 
       const res = await fetch(`${apiUrl}/api/inquiries/${id}`, {

@@ -1,26 +1,26 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, { type Express, type Request, type Response } from "express";
+import mongoSanitize from "express-mongo-sanitize";
+import helmet from "helmet";
 import http from "http";
 import morgan from "morgan";
-import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
 import swaggerUi from "swagger-ui-express";
 
 import { loadConfig } from "@helpers/config.helper";
 loadConfig();
 
+import { type IUser } from "@dtos/user.dto";
 import { logger } from "@helpers/logger.helper";
 import { swaggerSpec } from "@helpers/swagger.helper";
-import routes from "@routes";
-import { type IUser } from "@dtos/user.dto";
 import errorHandler from "@middlewares/error-handler.middleware";
 import { globalLimiter } from "@middlewares/rate-limit.middleware";
+import routes from "@routes";
+import { runPropertySeeder } from "@seeders/property.seeder";
+import { ensureDefaultAdminUser } from "@seeders/user.seeder";
 import { initDB } from "@services/database.service";
 import { initPassport } from "@services/passport-jwt.service";
 import path from "path";
-import { runPropertySeeder } from "@seeders/property.seeder";
-import { ensureDefaultAdminUser } from "@seeders/user.seeder";
 
 declare global {
   namespace Express {
@@ -45,7 +45,35 @@ app.use(helmet({
 })); // Disable CSP to allow Swagger UI resources to load
 app.use(mongoSanitize());
 
-app.use(cors());
+// ✅ UPDATED CORS CONFIGURATION
+const allowedOrigins = [
+  // Development
+  'http://localhost:3000',
+  'http://localhost:3001',
+  // Production
+  'https://hart.digiindiasolutions.com',
+  'https://hartapi.digiindiasolutions.com',
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // ✅ Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) {
+        return callback(null, true);
+      }
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log('❌ CORS blocked for origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  }),
+);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());

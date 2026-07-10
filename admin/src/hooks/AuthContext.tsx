@@ -1,5 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -20,7 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -72,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = sessionStorage.getItem('haertner_token');
     if (token) {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
         await fetch(`${apiUrl}/api/auth/logout`, {
           method: 'POST',
           headers: {

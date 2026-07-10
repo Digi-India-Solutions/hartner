@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { FaMapMarkerAlt, FaEuroSign, FaRulerCombined, FaPercent } from "react-icons/fa";
+import { use, useEffect, useState } from "react";
+import { FaEuroSign, FaMapMarkerAlt, FaPercent, FaRulerCombined } from "react-icons/fa";
 
 // Category mapping to match database category field and display title
 const categoryMap = {
@@ -46,7 +45,7 @@ function CategoryPage({ params: paramsPromise }) {
     async function fetchProperties() {
       try {
         setLoading(true);
-        const res = await fetch("http://localhost:8000/api/properties");
+        const res = await fetch("https://hartapi.digiindiasolutions.com/api/properties");
         if (!res.ok) {
           throw new Error("Fehler beim Laden der Immobilien");
         }
@@ -80,9 +79,9 @@ function CategoryPage({ params: paramsPromise }) {
       // If it is absolute URL or starts with uploads
       const img = property.images[0].url || property.images[0];
       if (img.startsWith("http")) return img;
-      if (img.startsWith("/uploads")) return `http://localhost:8000${img}`;
+      if (img.startsWith("/uploads")) return `https://hartapi.digiindiasolutions.com${img}`;
       if (img.startsWith("/")) return img;
-      return `http://localhost:8000/${img}`;
+      return `https://hartapi.digiindiasolutions.com/${img}`;
     }
     // Fallbacks based on category
     if (categoryConfig.dbKey === "gewerbe") return "/images/NG5.png";

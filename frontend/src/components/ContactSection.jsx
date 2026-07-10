@@ -1,7 +1,7 @@
 "use client";
 
+import { Globe, Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
-import { MapPin, Phone, Mail, Globe, MailOpen } from "lucide-react";
 
 export default function ContactSection() {
   const [openModal, setOpenModal] = useState(false);
@@ -18,7 +18,7 @@ export default function ContactSection() {
     setSubmitting(true);
     setSubmitError("");
     try {
-      const res = await fetch("http://localhost:8000/api/inquiries", {
+      const res = await fetch("https://hartapi.digiindiasolutions.com/api/inquiries", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

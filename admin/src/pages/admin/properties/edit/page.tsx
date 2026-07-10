@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { showToast } from '@/components/base/Toast';
 import { ConfirmDialog } from '@/components/base/ConfirmDialog';
+import { showToast } from '@/components/base/Toast';
 import { useProperties } from '@/hooks/PropertiesContext';
-import type { Property, PropertyDetailFields, PropertyStatus, PropertyCategory } from '@/mocks/properties';
-import { DetailFieldsGrid } from './components/DetailFieldsGrid';
+import type { PropertyCategory, PropertyDetailFields, PropertyStatus } from '@/mocks/properties';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CardPreviewFields } from './components/CardPreviewFields';
+import { DetailFieldsGrid } from './components/DetailFieldsGrid';
+import { ImageManager } from './components/ImageManager';
 import { PropertyCardPreview } from './components/PropertyCardPreview';
 import { StatusPanel } from './components/StatusPanel';
-import { ImageManager } from './components/ImageManager';
 
 const emptyDetailFields: PropertyDetailFields = {
   wohnflaeche: '', nutzflaeche: '', widmung: '', grundflaeche: '',
@@ -115,7 +115,7 @@ export default function PropertyEditorPage() {
         showToast(t('images.uploading') || 'Bilder werden hochgeladen...', 'info');
         const uploaded = await uploadPropertyImages(id, files);
         const uploadedUrls = uploaded.map((img: any) => {
-          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+          const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
           return img.url.startsWith('/uploads') ? `${apiUrl}${img.url}` : img.url;
         });
         setImages((prev) => [...prev, ...uploadedUrls]);
