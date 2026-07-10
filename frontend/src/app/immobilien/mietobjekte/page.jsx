@@ -13,7 +13,7 @@ export default function Mietobjekte() {
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const res = await fetch("http://localhost:8000/api/properties");
+        const res = await fetch("https://hartapi.digiindiasolutions.com/api/properties");
         if (!res.ok) throw new Error("Fehler beim Laden");
 
         const json = await res.json();

@@ -1,5 +1,5 @@
-import swaggerJSDoc from "swagger-jsdoc";
 import path from "path";
+import swaggerJSDoc from "swagger-jsdoc";
 
 const options = {
   definition: {
@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:8000/api",
+        url: "https://hartapi.digiindiasolutions.com/api",
         description: "Development server",
       },
     ],

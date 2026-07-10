@@ -1,7 +1,7 @@
 "use client";
 
-import { BsGeoAltFill, BsArrowBarRight } from "react-icons/bs";
 import Link from "next/link";
+import { BsArrowBarRight, BsGeoAltFill } from "react-icons/bs";
 
 const categoryLabels = {
   zinshaus: "Zinshaus",
@@ -80,7 +80,7 @@ export default function PropertyCard({ property }) {
     if (url.startsWith("/wp-content") || url.startsWith("/wp-includes")) {
       return `https://hartner.digiindiasolutions.com${url}`;
     }
-    return `http://localhost:8000${url}`;
+    return `https://hartapi.digiindiasolutions.com${url}`;
   };
 
   const firstImage = property.images && property.images.length > 0

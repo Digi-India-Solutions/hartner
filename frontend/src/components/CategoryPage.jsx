@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import PropertyCard from "@/components/PropertyCard";
+import { useEffect, useState } from "react";
 
-const BACKEND_URL = "http://localhost:8000";
+const BACKEND_URL = "https://hartapi.digiindiasolutions.com";
 
 export default function CategoryPage({ category, title, subtitle, description }) {
   const [properties, setProperties] = useState([]);

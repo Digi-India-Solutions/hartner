@@ -42,7 +42,7 @@ const mapStatusToFrontend = (status: string): PropertyStatus => {
 const resolveImageUrl = (url: string) => {
   if (!url) return '';
   if (url.startsWith('/uploads')) {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
     return `${apiUrl}${url}`;
   }
   return url;
@@ -220,7 +220,7 @@ export function PropertiesProvider({ children }: { children: ReactNode }) {
         setLoadingMore(true);
       }
 
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const params = new URLSearchParams();
       params.append('page', String(pageNum));
       params.append('limit', '12');
@@ -322,7 +322,7 @@ const goToPreviousPage = useCallback(async () => {
     });
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const ids = updatedList.map((p) => p.id);
       const response = await handleResponse(await fetch(`${apiUrl}/api/properties/reorder`, {
         method: 'PATCH',
@@ -342,7 +342,7 @@ const goToPreviousPage = useCallback(async () => {
 
   const updatePropertyStatus = useCallback(async (id: string, status: PropertyStatus) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const response = await handleResponse(await fetch(`${apiUrl}/api/properties/${id}/status`, {
         method: 'PATCH',
         headers: getAuthHeaders(),
@@ -364,7 +364,7 @@ const goToPreviousPage = useCallback(async () => {
 
   const updateProperty = useCallback(async (id: string, propertyData: Partial<Property>) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const response = await handleResponse(await fetch(`${apiUrl}/api/properties/${id}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -386,7 +386,7 @@ const goToPreviousPage = useCallback(async () => {
 
   const deleteProperty = useCallback(async (id: string) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const response = await handleResponse(await fetch(`${apiUrl}/api/properties/${id}`, {
         method: 'DELETE',
         headers: getAuthHeaders(),
@@ -405,7 +405,7 @@ const goToPreviousPage = useCallback(async () => {
 
   const addProperty = useCallback(async (propertyData: Partial<Property>) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const response = await handleResponse(await fetch(`${apiUrl}/api/properties`, {
         method: 'POST',
         headers: getAuthHeaders(),
@@ -432,7 +432,7 @@ const goToPreviousPage = useCallback(async () => {
 
   const uploadPropertyImages = useCallback(async (id: string, files: File[]) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const formData = new FormData();
       files.forEach((file) => formData.append('images', file));
 
@@ -463,7 +463,7 @@ const goToPreviousPage = useCallback(async () => {
       const prop = properties.find((p) => p.id === id);
       if (!prop) return;
 
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://hartapi.digiindiasolutions.com';
       const responseProp = await handleResponse(await fetch(`${apiUrl}/api/properties/${id}`, {
         headers: getAuthHeaders(),
       }));

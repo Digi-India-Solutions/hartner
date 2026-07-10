@@ -3,8 +3,8 @@
 
 import { use, useEffect, useState } from "react";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -63,7 +63,7 @@ const [galleryIndex, setGalleryIndex] = useState(0);
     setSubmitError("");
     try {
       const subject = form.subject || `Anfrage zu ${property.title}`;
-      const res = await fetch("http://localhost:8000/api/inquiries", {
+      const res = await fetch("https://hartapi.digiindiasolutions.com/api/inquiries", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const [galleryIndex, setGalleryIndex] = useState(0);
   useEffect(() => {
     async function fetchProperty() {
       try {
-        const res = await fetch(`http://localhost:8000/api/properties/${id}`);
+        const res = await fetch(`https://hartapi.digiindiasolutions.com/api/properties/${id}`);
         if (!res.ok) throw new Error("Nicht gefunden");
         const data = await res.json();
         setProperty(data.data || data);
@@ -139,7 +139,7 @@ const [galleryIndex, setGalleryIndex] = useState(0);
     if (url.startsWith("/wp-content") || url.startsWith("/wp-includes")) {
       return `https://hartner.digiindiasolutions.com${url}`;
     }
-    return `http://localhost:8000${url}`;
+    return `https://hartapi.digiindiasolutions.com${url}`;
   };
 
   const imageLoader = ({ src }) => src;
