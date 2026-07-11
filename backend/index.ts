@@ -4,6 +4,7 @@ import express, { type Express, type Request, type Response } from "express";
 import mongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
 import http from "http";
+
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
@@ -31,12 +32,12 @@ declare global {
   }
 }
 
-const port = Number(process.env.PORT) ?? 5000;
+const port = Number(process.env.PORT) || 5000;
 
 const app: Express = express();
 
 // Trust proxy for rate limiting behind reverse proxies (like Nginx, Cloudflare, etc.)
-app.set("trust proxy", true);
+app.set("trust proxy", 1);
 
 // Security middlewares
 app.use(helmet({ 
@@ -53,6 +54,7 @@ const allowedOrigins = [
   // Production
   'https://hart.digiindiasolutions.com',
   'https://hartapi.digiindiasolutions.com',
+  'https://hartneradmin.digiindiasolutions.com',
 ];
 
 app.use(
@@ -116,4 +118,7 @@ const initApp = async (): Promise<void> => {
   });
 };
 
-void initApp();
+initApp().catch((err) => {
+  logger.error("Failed to start server:", err);
+  process.exit(1);
+});

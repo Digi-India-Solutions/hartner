@@ -9,4 +9,4 @@ check_users.js
 .env
 .env.local
 
-*.log
+*.log.env.production
