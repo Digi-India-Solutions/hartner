@@ -380,7 +380,7 @@ export default function PropertyDetailPage({ params }) {
           <div className="lg:col-span-4 lg:sticky lg:top-36 flex flex-col gap-6">
 
             {/* FINANZEN & RENDITE */}
-            {hasFinanzen && (
+            {(hasFinanzen || hasAusstattung) && (
               <div className="sidebar-card bg-white p-6 rounded-3xl border shadow-xs">
                 <h3 className="detail-title-sm text-dark fw-bold mb-3 text-xs uppercase tracking-widest text-gray-400">
                   Finanzen & Rendite
@@ -419,130 +419,130 @@ export default function PropertyDetailPage({ params }) {
             )}
 
             {hasFlaechen && (
-              <div className="bg-white rounded-3xl border shadow-xs overflow-hidden">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left px-6 py-5 text-black">
-                        Eigenschaft
-                      </th>
-                      <th className="text-right px-6 py-5 text-black">
-                        Wert
-                      </th>
-                    </tr>
-                  </thead>
+  <div className="bg-white rounded-3xl border shadow-xs overflow-hidden">
+    <table className="w-full">
+      <thead>
+        <tr className="border-b">
+          <th className="text-left px-6 py-5 text-black">
+            Eigenschaft
+          </th>
+          <th className="text-right px-6 py-5 text-black">
+            Wert
+          </th>
+        </tr>
+      </thead>
 
-                  <tbody>
+      <tbody>
 
-                    {details.wohnflaeche && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">Wohnfläche</td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.wohnflaeche}
-                        </td>
-                      </tr>
-                    )}
+        {details.wohnflaeche && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Wohnfläche</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.wohnflaeche}
+            </td>
+          </tr>
+        )}
 
-                    {details.nutzflaeche && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">Nutzfläche</td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.nutzflaeche}
-                        </td>
-                      </tr>
-                    )}
+        {details.nutzflaeche && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Nutzfläche</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.nutzflaeche}
+            </td>
+          </tr>
+        )}
 
-                    {details.widmung && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">Widmung</td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.widmung}
-                        </td>
-                      </tr>
-                    )}
+        {details.widmung && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Widmung</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.widmung}
+            </td>
+          </tr>
+        )}
 
-                    {details.grundflaeche && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">Grundfläche</td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.grundflaeche}
-                        </td>
-                      </tr>
-                    )}
+        {details.grundflaeche && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">Grundfläche</td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.grundflaeche}
+            </td>
+          </tr>
+        )}
 
-                    {details.unbefristete_vermietung && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">
-                          Unbefristete Vermietung
-                        </td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {formatValue(details.unbefristete_vermietung)}
-                        </td>
-                      </tr>
-                    )}
+        {details.unbefristete_vermietung && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Unbefristete Vermietung
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {formatValue(details.unbefristete_vermietung)}
+            </td>
+          </tr>
+        )}
 
-                    {details.balkon_terrassen && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">
-                          Balkon / Terrassen
-                        </td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.balkon_terrassen}
-                        </td>
-                      </tr>
-                    )}
+        {details.balkon_terrassen && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Balkon / Terrassen
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.balkon_terrassen}
+            </td>
+          </tr>
+        )}
 
-                    {details.eigengareten && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">
-                          Eigengärten
-                        </td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.eigengareten}
-                        </td>
-                      </tr>
-                    )}
+        {details.eigengareten && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Eigengärten
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.eigengareten}
+            </td>
+          </tr>
+        )}
 
-                    {details.ist_ertrag_netto && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">
-                          Ist-Ertrag (netto)
-                        </td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.ist_ertrag_netto}
-                        </td>
-                      </tr>
-                    )}
+        {details.ist_ertrag_netto && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Ist-Ertrag (netto)
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.ist_ertrag_netto}
+            </td>
+          </tr>
+        )}
 
-                    {details.soll_ertrag_netto && (
-                      <tr className="border-b">
-                        <td className="px-6 py-5 text-gray-600">
-                          Soll-Ertrag (netto)
-                        </td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.soll_ertrag_netto}
-                        </td>
-                      </tr>
-                    )}
+        {details.soll_ertrag_netto && (
+          <tr className="border-b">
+            <td className="px-6 py-5 text-gray-600">
+              Soll-Ertrag (netto)
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.soll_ertrag_netto}
+            </td>
+          </tr>
+        )}
 
-                    {details.ist_netto_mietzins && (
-                      <tr>
-                        <td className="px-6 py-5 text-gray-600">
-                          Ø Ist-Nettomietzins
-                        </td>
-                        <td className="px-6 py-5 text-right font-bold text-black">
-                          {details.ist_netto_mietzins}
-                        </td>
-                      </tr>
-                    )}
+        {details.ist_netto_mietzins && (
+          <tr>
+            <td className="px-6 py-5 text-gray-600">
+              Ø Ist-Nettomietzins
+            </td>
+            <td className="px-6 py-5 text-right font-bold text-black">
+              {details.ist_netto_mietzins}
+            </td>
+          </tr>
+        )}
 
-                  </tbody>
-                </table>
-              </div>
-            )}
+      </tbody>
+    </table>
+  </div>
+)}
 
             {/* AUSSTATTUNG & BELEGUNG */}
-            {hasAusstattung && (
+            {/* {hasAusstattung && (
               <div className="sidebar-card bg-white p-6 rounded-3xl border shadow-xs">
                 <h3 className="detail-title-sm text-dark fw-bold mb-3 text-xs uppercase tracking-widest text-gray-400">
                   Ausstattung & Belegung
@@ -605,7 +605,7 @@ export default function PropertyDetailPage({ params }) {
                   )}
                 </ul>
               </div>
-            )}
+            )} */}
 
             {/* KONTAKT / INTERESSE WIDGET */}
             <div className="sidebar-card bg-dark text-white p-6 rounded-3xl border-0 shadow-sm flex flex-col gap-4">
