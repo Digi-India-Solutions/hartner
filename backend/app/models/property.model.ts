@@ -52,11 +52,11 @@ const PropertySchema = new Schema<IProperty>(
       type: String,
       required: true,
       enum: [
-  "Gewerbeimmobilien",
-  "Investmentimmobilien",
-  "Wohnimmobilien",
-  "Mietobjekte",
-]
+        'Gewerbeimmobilien',
+        'Investmentimmobilien',
+        'Wohnimmobilien',
+        'Mietobjekte'
+      ]
     },
     address: { type: String, default: "" },
     status: {
@@ -71,8 +71,8 @@ const PropertySchema = new Schema<IProperty>(
     details: { type: PropertyDetailsSchema, default: {} },
     card_fields: { type: [String], default: [] }
   },
-  { 
-    timestamps: { createdAt: "created_at", updatedAt: "updated_at" } 
+  {
+    timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
   }
 );
 

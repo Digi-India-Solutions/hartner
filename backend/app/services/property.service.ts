@@ -31,7 +31,7 @@ export const getPropertyBySlug = async (slug: string) => {
 };
 
 export const getAllProperties = async (filter: any = {}, options: any = {}) => {
-  const result = await PropertySchema.find(filter, null, options).lean();
+  const result = await PropertySchema.find(filter, null, options).sort({ createdAt: -1 }).lean();
   return result;
 };
 

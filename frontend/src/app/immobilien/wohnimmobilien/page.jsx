@@ -21,11 +21,12 @@ export default function Wohnimmobilien() {
 
         const filtered = all.filter(
           (p) =>
-            p.category === "wohnimmobilien" &&
+            p.category === "Wohnimmobilien" &&
             p.status === "published"
         );
 
-        setProperties(filtered);
+        setProperties([...filtered].reverse());
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching properties:", err);
       } finally {

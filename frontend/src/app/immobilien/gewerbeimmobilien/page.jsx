@@ -21,11 +21,13 @@ export default function Gewerbeimmobilien() {
 
         const filtered = all.filter(
           (p) =>
-            p.category === "gewerbe" &&
+            p.category === "Gewerbeimmobilien" &&
             p.status === "published"
         );
 
-        setProperties(filtered);
+        // setProperties(filtered.revarce());
+        setProperties([...filtered].reverse());
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching properties:", err);
       } finally {

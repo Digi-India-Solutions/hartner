@@ -99,6 +99,7 @@ export default function PropertyEditorPage() {
       } else if (id) {
         await updateProperty(id, propertyData);
         showToast(t('toast.propertySaved'));
+         navigate(`/admin/properties`);
         setHasUnsaved(false);
       }
     } catch (err: any) {

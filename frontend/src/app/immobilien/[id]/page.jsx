@@ -48,7 +48,7 @@ export default function PropertyDetailPage({ params }) {
   const [mainSwiper, setMainSwiper] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
-const [galleryIndex, setGalleryIndex] = useState(0);
+  const [galleryIndex, setGalleryIndex] = useState(0);
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -93,6 +93,7 @@ const [galleryIndex, setGalleryIndex] = useState(0);
     async function fetchProperty() {
       try {
         const res = await fetch(`https://hartapi.digiindiasolutions.com/api/properties/${id}`);
+        console.log("res==>" ,res)
         if (!res.ok) throw new Error("Nicht gefunden");
         const data = await res.json();
         setProperty(data.data || data);
@@ -229,93 +230,92 @@ const [galleryIndex, setGalleryIndex] = useState(0);
             <div>
               <div className="property-hero-image w-full h-[300px] sm:h-[400px] md:h-[480px] rounded-3xl overflow-hidden shadow-sm bg-gray-50 border border-gray-100">
 
-  {images.length > 0 ? (
-    <Swiper
-    onSwiper={(swiper) => {
-  console.log("Main Swiper:", swiper);
-  setMainSwiper(swiper);
-}}
-      navigation
-      modules={[Navigation, Thumbs]}
-      thumbs={{
-  swiper:
-    thumbsSwiper && !thumbsSwiper.destroyed
-      ? thumbsSwiper
-      : null,
-}}
-      onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-      className="w-full h-full"
-    >
-      {images.map((img, index) => (
-        <SwiperSlide key={index}>
-          <div className="relative w-full h-full">
-            <Image
-              loader={imageLoader}
-              src={getImageUrl(img)}
-              alt={`${property.title} - Bild ${index + 1}`}
-              onClick={() => {
-                setGalleryIndex(index);
-                setShowGallery(true);
-              }}
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              className="object-contain cursor-pointer"
-            />
-          </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
-  ) : (
-    <div className="w-full h-full flex items-center justify-center text-6xl text-gray-300">
-      🏠
-    </div>
-  )}
+                {images.length > 0 ? (
+                  <Swiper
+                    onSwiper={(swiper) => {
+                      console.log("Main Swiper:", swiper);
+                      setMainSwiper(swiper);
+                    }}
+                    navigation
+                    modules={[Navigation, Thumbs]}
+                    thumbs={{
+                      swiper:
+                        thumbsSwiper && !thumbsSwiper.destroyed
+                          ? thumbsSwiper
+                          : null,
+                    }}
+                    onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+                    className="w-full h-full"
+                  >
+                    {images.map((img, index) => (
+                      <SwiperSlide key={index}>
+                        <div className="relative w-full h-full">
+                          <Image
+                            loader={imageLoader}
+                            src={getImageUrl(img)}
+                            alt={`${property.title} - Bild ${index + 1}`}
+                            onClick={() => {
+                              setGalleryIndex(index);
+                              setShowGallery(true);
+                            }}
+                            fill
+                            priority={index === 0}
+                            sizes="100vw"
+                            className="object-contain cursor-pointer"
+                          />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-6xl text-gray-300">
+                    🏠
+                  </div>
+                )}
 
-</div>
+              </div>
 
               {images.length > 1 && (
-  <Swiper
-  onSwiper={setThumbsSwiper}
-  
-  freeMode={true}
-  modules={[Thumbs, Navigation]}
-  spaceBetween={12}
-  slidesPerView={4}
-  watchSlidesProgress={true}
-  
-  className="mt-4"
->
-    {images.map((img, i) => (
-      <SwiperSlide
-  key={img.id || i}
-  onClick={() => {
-    mainSwiper?.slideTo(i);
-    setActiveIndex(i);
-  }}
->
-        <div className="relative w-full h-24">
-          <Image
-            loader={imageLoader}
-            src={getImageUrl(img)}
-            alt={`${property.title} - Bild ${i + 1}`}
-            onClick={() => {
-              mainSwiper?.slideTo(i);
-              setActiveIndex(i);
-            }}
-            fill
-            sizes="100px"
-            className={`object-cover rounded-xl cursor-pointer transition border-4 ${
-              activeIndex === i
-                ? "border-[#c8a052]"
-                : "border-transparent"
-            }`}
-          />
-        </div>
-      </SwiperSlide>
-    ))}
-  </Swiper>
-)}
+                <Swiper
+                  onSwiper={setThumbsSwiper}
+
+                  freeMode={true}
+                  modules={[Thumbs, Navigation]}
+                  spaceBetween={12}
+                  slidesPerView={4}
+                  watchSlidesProgress={true}
+
+                  className="mt-4"
+                >
+                  {images.map((img, i) => (
+                    <SwiperSlide
+                      key={img.id || i}
+                      onClick={() => {
+                        mainSwiper?.slideTo(i);
+                        setActiveIndex(i);
+                      }}
+                    >
+                      <div className="relative w-full h-24">
+                        <Image
+                          loader={imageLoader}
+                          src={getImageUrl(img)}
+                          alt={`${property.title} - Bild ${i + 1}`}
+                          onClick={() => {
+                            mainSwiper?.slideTo(i);
+                            setActiveIndex(i);
+                          }}
+                          fill
+                          sizes="100px"
+                          className={`object-cover rounded-xl cursor-pointer transition border-4 ${activeIndex === i
+                              ? "border-[#c8a052]"
+                              : "border-transparent"
+                            }`}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
             </div>
 
             {/* Objektbeschreibung */}
@@ -419,127 +419,127 @@ const [galleryIndex, setGalleryIndex] = useState(0);
             )}
 
             {hasFlaechen && (
-  <div className="bg-white rounded-3xl border shadow-xs overflow-hidden">
-    <table className="w-full">
-      <thead>
-        <tr className="border-b">
-          <th className="text-left px-6 py-5 text-black">
-            Eigenschaft
-          </th>
-          <th className="text-right px-6 py-5 text-black">
-            Wert
-          </th>
-        </tr>
-      </thead>
+              <div className="bg-white rounded-3xl border shadow-xs overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left px-6 py-5 text-black">
+                        Eigenschaft
+                      </th>
+                      <th className="text-right px-6 py-5 text-black">
+                        Wert
+                      </th>
+                    </tr>
+                  </thead>
 
-      <tbody>
+                  <tbody>
 
-        {details.wohnflaeche && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Wohnfläche</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.wohnflaeche}
-            </td>
-          </tr>
-        )}
+                    {details.wohnflaeche && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">Wohnfläche</td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.wohnflaeche}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.nutzflaeche && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Nutzfläche</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.nutzflaeche}
-            </td>
-          </tr>
-        )}
+                    {details.nutzflaeche && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">Nutzfläche</td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.nutzflaeche}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.widmung && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Widmung</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.widmung}
-            </td>
-          </tr>
-        )}
+                    {details.widmung && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">Widmung</td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.widmung}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.grundflaeche && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Grundfläche</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.grundflaeche}
-            </td>
-          </tr>
-        )}
+                    {details.grundflaeche && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">Grundfläche</td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.grundflaeche}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.unbefristete_vermietung && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Unbefristete Vermietung
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {formatValue(details.unbefristete_vermietung)}
-            </td>
-          </tr>
-        )}
+                    {details.unbefristete_vermietung && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">
+                          Unbefristete Vermietung
+                        </td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {formatValue(details.unbefristete_vermietung)}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.balkon_terrassen && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Balkon / Terrassen
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.balkon_terrassen}
-            </td>
-          </tr>
-        )}
+                    {details.balkon_terrassen && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">
+                          Balkon / Terrassen
+                        </td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.balkon_terrassen}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.eigengareten && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Eigengärten
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.eigengareten}
-            </td>
-          </tr>
-        )}
+                    {details.eigengareten && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">
+                          Eigengärten
+                        </td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.eigengareten}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.ist_ertrag_netto && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Ist-Ertrag (netto)
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.ist_ertrag_netto}
-            </td>
-          </tr>
-        )}
+                    {details.ist_ertrag_netto && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">
+                          Ist-Ertrag (netto)
+                        </td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.ist_ertrag_netto}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.soll_ertrag_netto && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Soll-Ertrag (netto)
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.soll_ertrag_netto}
-            </td>
-          </tr>
-        )}
+                    {details.soll_ertrag_netto && (
+                      <tr className="border-b">
+                        <td className="px-6 py-5 text-gray-600">
+                          Soll-Ertrag (netto)
+                        </td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.soll_ertrag_netto}
+                        </td>
+                      </tr>
+                    )}
 
-        {details.ist_netto_mietzins && (
-          <tr>
-            <td className="px-6 py-5 text-gray-600">
-              Ø Ist-Nettomietzins
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.ist_netto_mietzins}
-            </td>
-          </tr>
-        )}
+                    {details.ist_netto_mietzins && (
+                      <tr>
+                        <td className="px-6 py-5 text-gray-600">
+                          Ø Ist-Nettomietzins
+                        </td>
+                        <td className="px-6 py-5 text-right font-bold text-black">
+                          {details.ist_netto_mietzins}
+                        </td>
+                      </tr>
+                    )}
 
-      </tbody>
-    </table>
-  </div>
-)}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
             {/* AUSSTATTUNG & BELEGUNG */}
             {hasAusstattung && (
@@ -656,23 +656,23 @@ const [galleryIndex, setGalleryIndex] = useState(0);
                 )}
                 <div>
                   <label>Ihr Name *</label>
-                  <input type="text" placeholder="z. B. Max Mustermann" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+                  <input type="text" placeholder="z. B. Max Mustermann" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
                 </div>
                 <div>
                   <label>E-Mail-Adresse *</label>
-                  <input type="email" placeholder="z. B. max@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+                  <input type="email" placeholder="z. B. max@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
                 </div>
                 <div>
                   <label>Telefonnummer *</label>
-                  <input type="tel" placeholder="z. B. +43 664 1234567" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+                  <input type="tel" placeholder="z. B. +43 664 1234567" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
                 </div>
                 <div>
                   <label>Betreff *</label>
-                  <input type="text" placeholder={`Anfrage zu ${property.title}`} value={form.subject || `Anfrage zu ${property.title}`} onChange={e => setForm({...form, subject: e.target.value})} />
+                  <input type="text" placeholder={`Anfrage zu ${property.title}`} value={form.subject || `Anfrage zu ${property.title}`} onChange={e => setForm({ ...form, subject: e.target.value })} />
                 </div>
                 <div>
                   <label>Ihre Nachricht</label>
-                  <textarea rows="4" placeholder="Schreiben Sie uns Ihre Nachricht..." value={form.message} onChange={e => setForm({...form, message: e.target.value})} />
+                  <textarea rows="4" placeholder="Schreiben Sie uns Ihre Nachricht..." value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
                 </div>
                 <button
                   onClick={handleSubmitInquiry}
@@ -687,36 +687,36 @@ const [galleryIndex, setGalleryIndex] = useState(0);
         </div>
       )}
       {showGallery && (
-  <div
-    className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
-    onClick={() => setShowGallery(false)}
-  >
-    <button
-      onClick={() => setShowGallery(false)}
-      className="absolute top-5 right-5 text-white text-5xl z-50"
-    >
-      ×
-    </button>
+        <div
+          className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
+          onClick={() => setShowGallery(false)}
+        >
+          <button
+            onClick={() => setShowGallery(false)}
+            className="absolute top-5 right-5 text-white text-5xl z-50"
+          >
+            ×
+          </button>
 
-    <Swiper
-      initialSlide={galleryIndex}
-      navigation
-      modules={[Navigation]}
-      className="w-[90%] h-[90%]"
-    >
-      {images.map((img, index) => (
-        <SwiperSlide key={index}>
-          <img
-            src={getImageUrl(img)}
-            alt=""
-            className="w-full h-full object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </SwiperSlide>
-      ))}
-    </Swiper>
-  </div>
-)}
+          <Swiper
+            initialSlide={galleryIndex}
+            navigation
+            modules={[Navigation]}
+            className="w-[90%] h-[90%]"
+          >
+            {images.map((img, index) => (
+              <SwiperSlide key={index}>
+                <img
+                  src={getImageUrl(img)}
+                  alt=""
+                  className="w-full h-full object-contain"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      )}
     </section>
   );
 }

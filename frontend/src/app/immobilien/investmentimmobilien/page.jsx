@@ -14,18 +14,20 @@ export default function Investmentimmobilien() {
     async function fetchProperties() {
       try {
         const res = await fetch("https://hartapi.digiindiasolutions.com/api/properties");
+        
         if (!res.ok) throw new Error("Fehler beim Laden");
 
         const json = await res.json();
         const all = json.data || json || [];
-
+console.log("res==> all", all)
         const filtered = all.filter(
           (p) =>
-            p.category === "investment" &&
+            p.category === "Investmentimmobilien" &&
             p.status === "published"
         );
 
-        setProperties(filtered);
+        setProperties([...filtered].reverse());
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching properties:", err);
       } finally {
