@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
@@ -10,7 +9,17 @@ const nextConfig = {
         port: "8000",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "hart.digiindiasolutions.com",
+        pathname: "/uploads/**",
+      },
     ],
+  },
+  experimental: {
+    staleTimes: {
+      dynamic: 0,
+    },
   },
 };
 

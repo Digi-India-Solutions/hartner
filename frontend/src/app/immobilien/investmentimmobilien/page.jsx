@@ -27,7 +27,6 @@ console.log("res==> all", all)
         );
 
         setProperties([...filtered].reverse());
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching properties:", err);
       } finally {

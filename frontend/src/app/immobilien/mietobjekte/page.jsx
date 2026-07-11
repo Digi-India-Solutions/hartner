@@ -29,6 +29,7 @@ export default function Mietobjekte() {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching properties:", err);
+        setLoading(false);
       } finally {
         setLoading(false);
       }
