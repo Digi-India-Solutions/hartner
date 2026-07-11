@@ -301,7 +301,11 @@ export const mockProperties = [
 ];
 
 export type PropertyStatus = 'Veröffentlicht' | 'Offline' | 'Entwurf';
-export type PropertyCategory = 'Zinshaus' | 'Gewerbe & Investment' | 'Haus & Wohnen' | 'Mietobjekte';
+export type PropertyCategory =
+  | 'Gewerbeimmobilien'
+  | 'Investmentimmobilien'
+  | 'Wohnimmobilien'
+  | 'Mietobjekte';
 
 export interface PropertyDetailFields {
   wohnflaeche: string;

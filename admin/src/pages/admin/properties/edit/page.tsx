@@ -19,7 +19,12 @@ const emptyDetailFields: PropertyDetailFields = {
   heizung: '', zustand: '', hwbFgee: '', kaufpreis: '', mieteMonatlich: '',
 };
 
-const categories: PropertyCategory[] = ['Zinshaus', 'Gewerbe & Investment', 'Haus & Wohnen', 'Mietobjekte'];
+const categories: PropertyCategory[] = [
+  'Gewerbeimmobilien',
+  'Investmentimmobilien',
+  'Wohnimmobilien',
+  'Mietobjekte'
+];
 
 export default function PropertyEditorPage() {
   const { t } = useTranslation();
@@ -32,7 +37,7 @@ export default function PropertyEditorPage() {
   const existing = !isNew && id ? getProperty(id) : undefined;
 
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<PropertyCategory>('Zinshaus');
+  const [category, setCategory] = useState<PropertyCategory>('Gewerbeimmobilien');
   const [address, setAddress] = useState('');
   const [detailFields, setDetailFields] = useState<PropertyDetailFields>({ ...emptyDetailFields });
   const [cardFields, setCardFields] = useState<string[]>([]);

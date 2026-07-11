@@ -3,21 +3,39 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 
 const mapCategoryToBackend = (cat: PropertyCategory): string => {
   switch (cat) {
-    case 'Zinshaus': return 'zinshaus';
-    case 'Gewerbe & Investment': return 'gewerbe';
-    case 'Haus & Wohnen': return 'haus_wohnen';
-    case 'Mietobjekte': return 'mietobjekte';
-    default: return 'zinshaus';
+    case "Gewerbeimmobilien":
+      return "Gewerbeimmobilien";
+
+    case "Investmentimmobilien":
+      return "Investmentimmobilien";
+
+    case "Wohnimmobilien":
+      return "Wohnimmobilien";
+
+    case "Mietobjekte":
+      return "Mietobjekte";
+
+    default:
+      return "Gewerbeimmobilien";
   }
 };
 
 const mapCategoryToFrontend = (cat: string): PropertyCategory => {
   switch (cat) {
-    case 'zinshaus': return 'Zinshaus';
-    case 'gewerbe': return 'Gewerbe & Investment';
-    case 'haus_wohnen': return 'Haus & Wohnen';
-    case 'mietobjekte': return 'Mietobjekte';
-    default: return 'Zinshaus';
+    case "Gewerbeimmobilien":
+      return "Gewerbeimmobilien";
+
+    case "Investmentimmobilien":
+      return "Investmentimmobilien";
+
+    case "Wohnimmobilien":
+      return "Wohnimmobilien";
+
+    case "Mietobjekte":
+      return "Mietobjekte";
+
+    default:
+      return "Gewerbeimmobilien";
   }
 };
 

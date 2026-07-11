@@ -40,10 +40,21 @@ export const runPropertySeeder = async (): Promise<void> => {
         if (normalizedStatus === "draft") prop.status = "draft";
 
         const normalizedCategory = String(prop.category ?? "").toLowerCase();
-        if (normalizedCategory === "zinshaus") prop.category = "zinshaus";
-        if (normalizedCategory === "gewerbe") prop.category = "gewerbe";
-        if (normalizedCategory === "haus & wohnen" || normalizedCategory === "haus_wohnen") prop.category = "haus_wohnen";
-        if (normalizedCategory === "mietobjekte") prop.category = "mietobjekte";
+        if (normalizedCategory === "gewerbeimmobilien") {
+  prop.category = "Gewerbeimmobilien";
+}
+
+if (normalizedCategory === "investmentimmobilien") {
+  prop.category = "Investmentimmobilien";
+}
+
+if (normalizedCategory === "wohnimmobilien") {
+  prop.category = "Wohnimmobilien";
+}
+
+if (normalizedCategory === "mietobjekte") {
+  prop.category = "Mietobjekte";
+}
 
         if (prop.sort_order === undefined) prop.sort_order = 0;
         if (!prop.details) prop.details = {};
