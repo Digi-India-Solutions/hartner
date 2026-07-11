@@ -380,7 +380,7 @@ const [galleryIndex, setGalleryIndex] = useState(0);
           <div className="lg:col-span-4 lg:sticky lg:top-36 flex flex-col gap-6">
 
             {/* FINANZEN & RENDITE */}
-            {hasFinanzen && (
+            {(hasFinanzen || hasAusstattung) && (
               <div className="sidebar-card bg-white p-6 rounded-3xl border shadow-xs">
                 <h3 className="detail-title-sm text-dark fw-bold mb-3 text-xs uppercase tracking-widest text-gray-400">
                   Finanzen & Rendite
@@ -415,134 +415,79 @@ const [galleryIndex, setGalleryIndex] = useState(0);
                     )}
                   </div>
                 )}
+                <div className="mt-6"></div>
+
+<h3 className="detail-title-sm text-dark fw-bold mb-3 text-xs uppercase tracking-widest text-gray-400">
+  Ausstattung & Belegung
+</h3>
+
+<ul className="flex flex-col gap-3">
+  {details.balkon_terrassen && (
+    <li className="flex justify-between items-center">
+      <span className="text-secondary flex items-center gap-2 small">
+        <BsBuilding size={16} className="text-gold" />
+        Balkon / Terrassen
+      </span>
+      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+        {details.balkon_terrassen}
+      </span>
+    </li>
+  )}
+
+  {details.eigengareten && (
+    <li className="flex justify-between items-center">
+      <span className="text-secondary flex items-center gap-2 small">
+        <BsTree size={16} className="text-gold" />
+        Eigengärten
+      </span>
+      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+        {details.eigengareten}
+      </span>
+    </li>
+  )}
+
+  {details.unbefristete_vermietung && (
+    <li className="flex justify-between items-center">
+      <span className="text-secondary flex items-center gap-2 small">
+        <BsFileEarmarkCheck size={16} className="text-gold" />
+        Unbefristete Vermietung
+      </span>
+      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+        {formatValue(details.unbefristete_vermietung)}
+      </span>
+    </li>
+  )}
+
+  {details.leerstand && (
+    <li className="flex justify-between items-center">
+      <span className="text-secondary flex items-center gap-2 small">
+        <BsInfoCircle size={16} className="text-gold" />
+        Leerstand
+      </span>
+      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+        {formatValue(details.leerstand)}
+      </span>
+    </li>
+  )}
+
+  {details.befristungen && (
+    <li className="flex justify-between items-center">
+      <span className="text-secondary flex items-center gap-2 small">
+        <BsShieldExclamation size={16} className="text-gold" />
+        Befristungen
+      </span>
+      <span className="badge bg-light text-dark border px-2 py-1 rounded-2 fw-bold font-monospace">
+        {details.befristungen}
+      </span>
+    </li>
+  )}
+</ul>
               </div>
             )}
 
-            {hasFlaechen && (
-  <div className="bg-white rounded-3xl border shadow-xs overflow-hidden">
-    <table className="w-full">
-      <thead>
-        <tr className="border-b">
-          <th className="text-left px-6 py-5 text-black">
-            Eigenschaft
-          </th>
-          <th className="text-right px-6 py-5 text-black">
-            Wert
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        {details.wohnflaeche && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Wohnfläche</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.wohnflaeche}
-            </td>
-          </tr>
-        )}
-
-        {details.nutzflaeche && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Nutzfläche</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.nutzflaeche}
-            </td>
-          </tr>
-        )}
-
-        {details.widmung && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Widmung</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.widmung}
-            </td>
-          </tr>
-        )}
-
-        {details.grundflaeche && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">Grundfläche</td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.grundflaeche}
-            </td>
-          </tr>
-        )}
-
-        {details.unbefristete_vermietung && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Unbefristete Vermietung
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {formatValue(details.unbefristete_vermietung)}
-            </td>
-          </tr>
-        )}
-
-        {details.balkon_terrassen && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Balkon / Terrassen
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.balkon_terrassen}
-            </td>
-          </tr>
-        )}
-
-        {details.eigengareten && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Eigengärten
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.eigengareten}
-            </td>
-          </tr>
-        )}
-
-        {details.ist_ertrag_netto && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Ist-Ertrag (netto)
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.ist_ertrag_netto}
-            </td>
-          </tr>
-        )}
-
-        {details.soll_ertrag_netto && (
-          <tr className="border-b">
-            <td className="px-6 py-5 text-gray-600">
-              Soll-Ertrag (netto)
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.soll_ertrag_netto}
-            </td>
-          </tr>
-        )}
-
-        {details.ist_netto_mietzins && (
-          <tr>
-            <td className="px-6 py-5 text-gray-600">
-              Ø Ist-Nettomietzins
-            </td>
-            <td className="px-6 py-5 text-right font-bold text-black">
-              {details.ist_netto_mietzins}
-            </td>
-          </tr>
-        )}
-
-      </tbody>
-    </table>
-  </div>
-)}
 
             {/* AUSSTATTUNG & BELEGUNG */}
-            {hasAusstattung && (
+            {/* {hasAusstattung && (
               <div className="sidebar-card bg-white p-6 rounded-3xl border shadow-xs">
                 <h3 className="detail-title-sm text-dark fw-bold mb-3 text-xs uppercase tracking-widest text-gray-400">
                   Ausstattung & Belegung
@@ -605,7 +550,7 @@ const [galleryIndex, setGalleryIndex] = useState(0);
                   )}
                 </ul>
               </div>
-            )}
+            )} */}
 
             {/* KONTAKT / INTERESSE WIDGET */}
             <div className="sidebar-card bg-dark text-white p-6 rounded-3xl border-0 shadow-sm flex flex-col gap-4">
