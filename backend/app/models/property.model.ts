@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
 import { type IProperty } from "@dtos/property.dto";
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
@@ -51,7 +51,12 @@ const PropertySchema = new Schema<IProperty>(
     category: {
       type: String,
       required: true,
-      enum: ["zinshaus", "gewerbe", "haus_wohnen", "mietobjekte"],
+      enum: [
+  "Gewerbeimmobilien",
+  "Investmentimmobilien",
+  "Wohnimmobilien",
+  "Mietobjekte",
+]
     },
     address: { type: String, default: "" },
     status: {

@@ -46,7 +46,7 @@ Thumbs.db
 *.temp
 
 # Uploads (optional - remove if you want to track uploaded files)
-backend/uploads/
+
 
 # zip archives
 *.zip

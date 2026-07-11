@@ -36,7 +36,11 @@ export interface IProperty {
   id?: string;
   title: string;
   slug: string;
-  category: "zinshaus" | "gewerbe" | "haus_wohnen" | "mietobjekte";
+  category:
+  | "Gewerbeimmobilien"
+  | "Investmentimmobilien"
+  | "Wohnimmobilien"
+  | "Mietobjekte";
   address?: string;
   status: PropertyStatus;
   sort_order: number;
