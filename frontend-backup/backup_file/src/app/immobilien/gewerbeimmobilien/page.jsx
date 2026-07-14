@@ -60,8 +60,7 @@ export default function Gewerbeimmobilien() {
   return (
     <section className="property-section font-sans">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-
-        <h3 className="property-section-title text-center py-4">
+        <h3 className="property-section-title text-center py-2">
           Gewerbeimmobilien
         </h3>
 

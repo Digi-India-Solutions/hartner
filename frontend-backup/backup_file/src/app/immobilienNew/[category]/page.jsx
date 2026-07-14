@@ -1,41 +1,63 @@
 "use client";
 
-import PropertyCard from "@/components/PropertyCard";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import PropertyCard from "@/components/PropertyCard";
 
 const ITEMS_PER_LOAD = 12;
 
-export default function Investmentimmobilien() {
+export default function CategoryPage() {
+  const { category } = useParams();
+
   const [properties, setProperties] = useState([]);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
   const [loading, setLoading] = useState(true);
 
+  // URL slug -> API category name
+  const categoryMap = {
+    gewerbeimmobilien: "Gewerbeimmobilien",
+    investmentimmobilien: "Investmentimmobilien",
+    mietobjekte: "Mietobjekte",
+    wohnimmobilien: "Wohnimmobilien",
+  };
+
+  const selectedCategory = categoryMap[category];
+
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const res = await fetch("https://hartapi.digiindiasolutions.com/api/properties");
-        
-        if (!res.ok) throw new Error("Fehler beim Laden");
+        setLoading(true);
 
-        const json = await res.json();
-        const all = json.data || json || [];
-console.log("res==> all", all)
-        const filtered = all.filter(
-          (p) =>
-            p.category === "Investmentimmobilien" &&
-            p.status === "published"
+        const res = await fetch(
+          "https://hartapi.digiindiasolutions.com/api/properties"
         );
 
-        setProperties([...filtered].reverse());
-      } catch (err) {
-        console.error("Error fetching properties:", err);
+        if (!res.ok) {
+          throw new Error("Failed to fetch properties");
+        }
+
+        const json = await res.json();
+
+        const all = json.data || json || [];
+
+        const filtered = all.filter(
+          (item) =>
+            item.category === selectedCategory &&
+            item.status === "published"
+        );
+
+        setProperties(filtered.reverse());
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchProperties();
-  }, []);
+    if (selectedCategory) {
+      fetchProperties();
+    }
+  }, [selectedCategory]);
 
   useEffect(() => {
     function handleScroll() {
@@ -51,21 +73,28 @@ console.log("res==> all", all)
 
     window.addEventListener("scroll", handleScroll);
 
-    return () =>
-      window.removeEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [properties]);
+
+  if (!selectedCategory) {
+    return (
+      <div className="py-32 text-center">
+        Invalid Category
+      </div>
+    );
+  }
 
   return (
     <section className="property-section font-sans">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
 
         <h3 className="property-section-title text-center py-4">
-          Investmentimmobilien
+          {selectedCategory}
         </h3>
 
         {loading && (
-          <div className="flex items-center justify-center py-24">
-            <div className="w-12 h-12 border-4 border-[#c8a052] border-t-transparent rounded-full animate-spin" />
+          <div className="flex justify-center py-24">
+            <div className="w-12 h-12 border-4 border-[#c8a052] border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
 
@@ -73,13 +102,12 @@ console.log("res==> all", all)
           <div className="text-center py-24">
             <p className="text-6xl mb-4">🏡</p>
 
-            <h2 className="text-2xl font-serif text-black mb-2">
+            <h2 className="text-2xl font-serif mb-2">
               Derzeit keine Immobilien verfügbar
             </h2>
 
-            <p className="text-gray-500 max-w-md mx-auto">
+            <p className="text-gray-500">
               In dieser Kategorie sind aktuell keine Objekte verfügbar.
-              Schauen Sie bald wieder vorbei.
             </p>
           </div>
         )}

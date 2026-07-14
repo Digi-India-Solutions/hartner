@@ -3,6 +3,14 @@
 import Link from "next/link";
 import { BsArrowBarRight, BsGeoAltFill } from "react-icons/bs";
 
+const categoryLabels = {
+  zinshaus: "Zinshaus",
+  gewerbe: "Gewerbeimmobilien",
+  haus_wohnen: "Wohnimmobilien",
+  mietobjekte: "Mietobjekte",
+};
+
+// Helper to map card fields to display labels and values dynamically
 const getCardFeatures = (property) => {
   const detailFields = property.details || {};
   const cardKeys = property.card_fields && property.card_fields.length > 0
@@ -57,8 +65,8 @@ const getCardFeatures = (property) => {
 
       const label = labelMap[key] || key;
       const formattedVal = (val === true || val === "true" || val === "Ja") ? "Ja" :
-        (val === false || val === "false" || val === "Nein") ? "Nein" : val;
-
+                           (val === false || val === "false" || val === "Nein") ? "Nein" : val;
+      
       return { label, value: formattedVal };
     })
     .filter(Boolean)
@@ -79,24 +87,13 @@ export default function PropertyCard({ property }) {
     ? getImageUrl(property.images[0].url)
 
     : "/images/card.jpg";
+
+
   const price = property.details?.kaufpreis || property.details?.miete_monatlich || "Preis auf Anfrage";
   const features = getCardFeatures(property);
 
-  const categorySlugMap = {
-    Gewerbeimmobilien: "gewerbeimmobilien",
-    Investmentimmobilien: "investmentimmobilien",
-    Mietobjekte: "mietobjekte",
-    Wohnimmobilien: "wohnimmobilien",
-  };
-
-  const slug = categorySlugMap[property.category];
-
-
-  return ( 
-    <Link
-      href={`/immobilien/${slug}/${property.id || property._id}`}
-      className="block h-full"
-    >
+  return (
+    <Link href={`/immobilien/${property.id || property._id}`} className="block h-full">
       <div className="property-card">
         {/* Image */}
         <div className="property-image">
